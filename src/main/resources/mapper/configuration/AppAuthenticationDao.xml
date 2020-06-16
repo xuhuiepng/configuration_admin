@@ -3,7 +3,7 @@
 
 <mapper namespace="cn.cnic.security.configuration.dao.AppAuthenticationDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="cn.cnic.security.configuration.entity.AppAuthenticationEntity" id="appAuthenticationMap">
         <result property="appToken" column="app_token"/>
         <result property="appName" column="app_name"/>
@@ -16,8 +16,18 @@
         <result property="redirectUri" column="redirect_uri"/>
         <result property="accessTokenUrl" column="access_token_url"/>
         <result property="theme" column="theme"/>
+        <result property="expiresIn" column="expires_in"/>
+        <result property="projectName" column="project_name"/>
         <result property="isDel" column="is_del"/>
     </resultMap>
+
+
+    <update id="logicDelete" parameterType="java.lang.String">
+        UPDATE app_authentication
+        SET is_del = "1"
+        WHERE
+            app_token = #{token}
+    </update>
 
 
 </mapper>

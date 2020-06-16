@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.cnic.security.configuration.dao.AppListDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="cn.cnic.security.configuration.entity.AppListEntity" id="AppListMap">
+        <result property="cId" column="c_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="clientId" column="client_id"/>
+    </resultMap>
+
+    <select id="selectAppListPage" resultMap="AppListMap">
+        SELECT
+            ca_user_app_explain.c_id,
+            users.user_id,
+            users.user_name,
+            ca_user_app_explain.client_id
+        FROM
+            (SELECT ca_user.user_name, ca_user.user_id FROM ca_user
+             WHERE
+                     ca_user.user_id IN ( SELECT ca_user_app_explain.user_id FROM ca_user_app_explain )
+             LIMIT #{minPage},#{pageSize} ) AS users
+                LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
+        WHERE ca_user_app_explain.c_id is NOT NULL
+          AND ca_user_app_explain.deactivation = '1'
+    </select>
+    <select id="selectAppListPageByUserName" resultMap="AppListMap">
+        SELECT
+            ca_user_app_explain.c_id,
+            users.user_id,
+            users.user_name,
+            ca_user_app_explain.client_id
+        FROM
+            ( SELECT ca_user.user_name, ca_user.user_id
+              FROM ca_user
+              WHERE
+                      ca_user.user_id IN ( SELECT ca_user_app_explain.user_id FROM ca_user_app_explain )
+                AND ca_user.user_name LIKE #{userName} LIMIT #{minPage},#{pageSize} ) AS users
+                LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
+        WHERE
+            ca_user_app_explain.c_id IS NOT NULL
+          AND ca_user_app_explain.deactivation = '1'
+    </select>
+
+
+</mapper>
+

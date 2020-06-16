@@ -40,7 +40,7 @@ public class AppAuthenticationEntity implements Serializable {
 	/**
 	 * 
 	 */
-	private Date updateTime;
+	private String updateTime;
 	/**
 	 * 应用向科技云认证的次数
 	 */
@@ -68,6 +68,6 @@ public class AppAuthenticationEntity implements Serializable {
 	/**
 	 * 逻辑删除
 	 */
-	private Enum isDel;
+	private Integer isDel;
 
 }
