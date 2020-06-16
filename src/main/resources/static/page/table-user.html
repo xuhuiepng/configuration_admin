@@ -1,0 +1,264 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="userName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">联系人</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="contacts" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <!-- <div class="layui-inline">
+                            <label class="layui-form-label">用户城市</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="city" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">用户职业</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="classify" autocomplete="off" class="layui-input">
+                            </div>
+                        </div> -->
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+            </div>
+        </script>
+
+        <table class="layui-hide" id="userTableId" lay-filter="userTableFilter"></table>
+
+        <script type="text/html" id="userTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+    </div>
+</div>
+
+<script>
+    layui.use(['form', 'table','miniPage','element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        function delUser(users) {
+            var success = false;
+            var ids = [];
+            if(Array.isArray(users)) {
+                users.forEach((item) => {
+                    ids.push(item.userId);
+                });
+            } else {
+                ids.push(users.userId)
+            }
+            $.ajax({
+                url: "/configuration/user/delete",
+                async: false,
+                contentType:"application/json",
+                type: "POST",
+                data: JSON.stringify(ids),
+                success: function(res) {
+                    success = true;
+                }
+            });
+            return success;
+        }
+
+        table.render({
+            elem: '#userTableId',
+            url: '/configuration/user/list',
+            parseData: function(res){ //res 即为原始返回的数据
+                return {
+                "code": res.code, //解析接口状态
+                "msg": res.msg, //解析提示文本
+                "count": res.page.totalCount, //解析数据长度
+                "data": res.page.list //解析数据列表
+                };},
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [[
+                {type: "checkbox", width: 50},
+                {field: 'userId', width: 80, title: 'ID', sort: true},
+                {field: 'userName', width: 200, title: '账户名'},
+                {field: 'roleId', width: 80, title: '角色'},
+                {field: 'orgId', width: 100, title: '机构ID'},
+                {field: 'orgParentId', width: 140, title: '上级机构ID'},
+                {field: 'contacts', width: 80, title: '联系人'},
+                {field: 'phone', width: 200, title: '电话'},
+                {field: 'remark', width: 100, title: '备注'},
+                {field: 'updateUser', width: 100, title: '更新账号'},
+                {field: 'updateTime', width: 100, title: '更新时间'},
+                {field: 'lastIp', width: 120, title: '最近登录IP'},
+                {field: 'lastTime', width: 135, title: '最近登录时间'},
+                {field: 'loginNumber', width: 100, title: '登录次数'},
+                {field: 'authenticationNumber', width: 120, title: '认证次数'},
+                {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 15,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+
+            //执行搜索重载
+            table.reload('userTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('toolbar(userTableFilter)', function (obj) {
+            if (obj.event === 'add') {   // 监听添加操作
+                var content = miniPage.getHrefContent('/page/table/add-user.html');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '添加用户',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('userTableId')
+                    , data = checkStatus.data;
+                layer.confirm('真的删除么?', function (index) {
+                    if(delUser(data)) {
+                        layer.msg("删除成功！");
+                    } else {
+                        layer.msg("删除失败！");
+                    }
+                    layer.close(index);
+                    table.reload('userTableId');
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(userTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(userTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+
+                var content = miniPage.getHrefContent('/page/table/edit-user.html');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '编辑用户',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                    success: function(lay, index) {
+                        $("#orgSelect").html("")
+                        $.ajax({
+                            url:"/configuration/institutionslist/list?limit=500",
+                            async:true,
+                            type:"POST",
+                            success:function(res){
+                                res = res.page.list;
+                                $("#orgSelect").append("<option value=''>请搜索选择</option>")
+                                for(var i=0;i<res.length;i++){
+                                    $("#orgSelect").append("<option value='"+res[i].id+"'>"+res[i].orgName+"</option>")
+                                }
+                                $('#userNameInput').val(data.userName);
+                                $('#roleIdRadio input[value="'+data.roleId+'"]').attr("checked",true);
+                                $('#orgParentIdSelect').val(data.orgParentId);
+                                $('#orgSelect').val(data.orgId);
+                                $('#contactsInput').val(data.contacts);
+                                $('#phoneInput').val(data.phone);
+                                $('#passwordInput').val(data.localPassword);
+                                $('#remarkInput').val(data.remark);
+                                
+                                form.render();
+                            },
+                            error:function(){
+                                console.log("出错！");
+                            }
+                        });
+                        form.on('submit(updateBtn)', function (data) {
+                            var api = "/configuration/user/update"
+                            // console.log(data.field)
+                            $.ajax({
+                                url: api,
+                                async: true,
+                                contentType:"application/json",
+                                type: "POST",
+                                data: JSON.stringify({...obj.data, ...data.field}),
+                                success: function(res) {
+                                    layer.msg("修改成功");
+                                    parent.layui.table.reload('userTableId')
+                                    layer.close(index);
+                                }
+                            })
+                            return true;
+                        });
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    if(delUser(obj.data)) {
+                        layer.msg("删除成功！");
+                    } else {
+                        layer.msg("删除失败！");
+                    }
+                    obj.del();
+                    layer.close(index);
+                    table.reload('userTableId');
+                });
+            }
+        });
+
+    });
+</script>

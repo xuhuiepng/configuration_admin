@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.cnic.security.configuration.dao.ComparingChartDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="cn.cnic.security.configuration.entity.ComparingChartEntity" id="comparingChartMap">
+        <result property="id" column="id"/>
+        <result property="suffix" column="suffix"/>
+        <result property="abbreviation" column="abbreviation"/>
+        <result property="fullname" column="fullName"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="belongTo" column="belong_to"/>
+    </resultMap>
+
+
+</mapper>
