@@ -1,8 +1,10 @@
 package cn.cnic.security.configuration.dao;
 
+import cn.cnic.security.configuration.entity.SysmUserInfo;
 import cn.cnic.security.configuration.entity.UserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 用户表
@@ -13,5 +15,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserDao extends BaseMapper<UserEntity> {
-	
+    //授权用的查找
+    SysmUserInfo findSysmUserInfo(@Param("username") String username);
 }

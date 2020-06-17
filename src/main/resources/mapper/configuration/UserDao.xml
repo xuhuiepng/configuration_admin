@@ -23,4 +23,44 @@
     </resultMap>
 
 
+    <resultMap id="SysmUserInfoMap" type="cn.cnic.security.configuration.entity.SysmUserInfo">
+        <association property="sysmUser"  resultMap="userMap">
+
+        </association>
+
+        <association property="sysmRole" javaType="cn.cnic.security.configuration.entity.SysmRole">
+            <result column="roleName" property="roleName" />
+        </association>
+
+        <association property="sysmListOrg" javaType="cn.cnic.security.configuration.entity.SysmListOrg">
+            <result property="orgName" column="org_name"/>
+            <result property="parentId" column="parent_id"/>
+            <result property="longitude" column="longitude"/>
+            <result property="latitude" column="latitude"/>
+        </association>
+
+
+    </resultMap>
+
+    <select id="findSysmUserInfo"  resultMap="SysmUserInfoMap">
+        SELECT
+            t1.user_id,
+            t1.user_name,
+            t1.role_id,
+            t1.org_id,
+            t1.contacts,
+            t2.role_nane,
+            t3.org_name,
+            t3.longitude,
+            t3.latitude,
+            t3.parent_id
+        FROM
+            ca_user t1
+        LEFT JOIN ca_role t2 ON t1.role_id = t2.role_id
+        LEFT JOIN ca_institutions_list t3 ON t1.org_id = t3.id
+
+        WHERE
+            t1.user_name = #{username,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

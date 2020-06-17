@@ -32,5 +32,5 @@ public class UserServiceImpl extends ServiceImpl<UserDao, UserEntity> implements
 
         return new PageUtils(page);
     }
-
+    
 }
