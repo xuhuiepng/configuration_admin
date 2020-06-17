@@ -23,4 +23,9 @@ public class AppListEntity {
      * 用户名
      */
     private String userName;
+
+    /**
+     * 应用名
+     */
+    private String appName;
 }
