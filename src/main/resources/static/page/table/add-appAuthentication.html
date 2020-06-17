@@ -25,14 +25,14 @@
         <div class="layui-form-item">
             <label class="layui-form-label">域名</label>
             <div class="layui-input-block">
-                <input type="text" name="domain" placeholder="请输入编号" value="" class="layui-input">
+                <input type="text" name="domain" placeholder="请输入域名" value="" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
             <label class="layui-form-label">过期时间/ms</label>
             <div class="layui-input-block">
-                <input type="text" name="expiresIn" placeholder="请输入编号" value="" class="layui-input">
+                <input type="text" name="expiresIn" lay-verify="number" placeholder="请输入过期时间" value="" class="layui-input">
             </div>
         </div>
 
@@ -149,7 +149,7 @@
             var url = "/configuration/appauthentication/save";
 
 
-            var index =layer.confirm('是否添加机构', {icon: 3, title:'提示'}, function(index){
+            var index =layer.confirm('是否添加项目', {icon: 3, title:'提示'}, function(index){
                 //do something
                 $.ajax({
                     type: "POST",
