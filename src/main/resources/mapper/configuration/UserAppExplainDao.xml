@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.cnic.security.configuration.dao.UserAppExplainDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="cn.cnic.security.configuration.entity.UserAppExplainEntity" id="userAppExplainMap">
+        <result property="cId" column="c_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="clientId" column="client_id"/>
+        <result property="deactivation" column="deactivation"/>
+    </resultMap>
+
+
+</mapper>

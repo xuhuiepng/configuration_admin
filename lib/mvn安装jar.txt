@@ -1,0 +1,1 @@
+E:\maven\apache-maven-3.6.1\bin\mvn install:install-file -Dfile=./oauth-0.1.4.jar -DgroupId=cn.vlabs.umt -DartifactId=oauth -Dversion=0.1.4 -Dpackaging=jar
