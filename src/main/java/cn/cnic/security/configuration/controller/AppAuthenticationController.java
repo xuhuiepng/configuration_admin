@@ -123,6 +123,15 @@ public class AppAuthenticationController {
                 return R.ok().put("isExist",true);
         }
 
+        if(appAuthentication.getProjectName()!=null){
+            queryWrapper.eq("project_name",appAuthentication.getProjectName());
+            queryWrapper.eq("is_del",0);
+            if(appAuthenticationService.count(queryWrapper)==0)
+                return R.ok().put("isExist",false);
+            else
+                return R.ok().put("isExist",true);
+        }
+
         return R.ok().put("isExist",false);
     }
 

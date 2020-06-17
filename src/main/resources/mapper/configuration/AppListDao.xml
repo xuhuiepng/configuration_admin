@@ -9,39 +9,77 @@
         <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
         <result property="clientId" column="client_id"/>
+        <result property="appName" column="app_name"/>
     </resultMap>
 
     <select id="selectAppListPage" resultMap="AppListMap">
         SELECT
-            ca_user_app_explain.c_id,
-            users.user_id,
-            users.user_name,
-            ca_user_app_explain.client_id
+            app.c_id,
+            app.user_id,
+            app.user_name,
+            app.client_id,
+            app_authentication.app_name
         FROM
-            (SELECT ca_user.user_name, ca_user.user_id FROM ca_user
-             WHERE
-                     ca_user.user_id IN ( SELECT ca_user_app_explain.user_id FROM ca_user_app_explain )
-             LIMIT #{minPage},#{pageSize} ) AS users
-                LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
-        WHERE ca_user_app_explain.c_id is NOT NULL
-          AND ca_user_app_explain.deactivation = '1'
+            (
+                SELECT
+                    ca_user_app_explain.c_id,
+                    users.user_id,
+                    users.user_name,
+                    ca_user_app_explain.client_id
+                FROM
+                    (
+                        SELECT
+                            ca_user.user_name,
+                            ca_user.user_id
+                        FROM
+                            ca_user
+                        WHERE
+                                ca_user.user_id IN ( SELECT ca_user_app_explain.user_id FROM ca_user_app_explain )
+                        LIMIT #{minPage},#{pageSize}
+                    ) AS users
+                        LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
+                WHERE
+                    ca_user_app_explain.c_id IS NOT NULL
+                  AND ca_user_app_explain.deactivation = '1'
+            ) AS app,
+            app_authentication
+        WHERE
+            app.client_id = app_authentication.client_id
     </select>
     <select id="selectAppListPageByUserName" resultMap="AppListMap">
         SELECT
-            ca_user_app_explain.c_id,
-            users.user_id,
-            users.user_name,
-            ca_user_app_explain.client_id
+            app.c_id,
+            app.user_id,
+            app.user_name,
+            app.client_id,
+            app_authentication.app_name
         FROM
-            ( SELECT ca_user.user_name, ca_user.user_id
-              FROM ca_user
-              WHERE
-                      ca_user.user_id IN ( SELECT ca_user_app_explain.user_id FROM ca_user_app_explain )
-                AND ca_user.user_name LIKE #{userName} LIMIT #{minPage},#{pageSize} ) AS users
-                LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
+            (
+                SELECT
+                    ca_user_app_explain.c_id,
+                    users.user_id,
+                    users.user_name,
+                    ca_user_app_explain.client_id
+                FROM
+                    (
+                        SELECT
+                            ca_user.user_name,
+                            ca_user.user_id
+                        FROM
+                            ca_user
+                        WHERE
+                            ca_user.user_id IN ( SELECT ca_user_app_explain.user_id FROM ca_user_app_explain )
+                            AND ca_user.user_name LIKE #{userName}
+                        LIMIT #{minPage},#{pageSize}
+                    ) AS users
+                        LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
+                WHERE
+                    ca_user_app_explain.c_id IS NOT NULL
+                  AND ca_user_app_explain.deactivation = '1'
+            ) AS app,
+            app_authentication
         WHERE
-            ca_user_app_explain.c_id IS NOT NULL
-          AND ca_user_app_explain.deactivation = '1'
+            app.client_id = app_authentication.client_id
     </select>
 
 

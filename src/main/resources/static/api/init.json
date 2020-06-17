@@ -34,15 +34,15 @@
           "target": "_self",
           "child": [
             {
-              "title": "项目权限",
-              "href": "page/table-appList.html",
-              "icon": "fa fa-list-alt",
-              "target": "_self"
-            },
-            {
               "title": "项目列表",
               "href": "page/table-appAuthentication.html",
               "icon": "fa fa-navicon",
+              "target": "_self"
+            },
+            {
+              "title": "项目权限",
+              "href": "page/table-appList.html",
+              "icon": "fa fa-list-alt",
               "target": "_self"
             }
           ]

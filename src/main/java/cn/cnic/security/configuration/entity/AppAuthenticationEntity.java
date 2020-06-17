@@ -33,6 +33,11 @@ public class AppAuthenticationEntity implements Serializable {
 	 * 绑定ip
 	 */
 	private String bingIp;
+
+	/**
+	 * 项目名
+	 */
+	private String projectName;
 	/**
 	 * 域名
 	 */
