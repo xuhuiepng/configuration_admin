@@ -104,6 +104,8 @@
                 data = data.page.list;
                 $("#orgSelect").append("<option value=''>请搜索选择</option>")
                 for(var i=0;i<data.length;i++){
+                    if(i < 13)
+                        continue
                     $("#orgSelect").append("<option value='"+data[i].id+"'>"+data[i].orgName+"</option>")
                 }
                 form.render();

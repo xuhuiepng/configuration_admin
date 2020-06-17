@@ -41,7 +41,7 @@
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <!-- <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button> -->
             </div>
         </script>
 
@@ -127,8 +127,8 @@
                 icon: 'layui-icon-tips'
             }],
             cols: [[
-                {type: "checkbox", width: 50},
-                {field: 'userId', width: 80, title: 'ID', sort: true},
+                // {type: "checkbox", width: 50},
+                // {field: 'userId', width: 80, title: 'ID', sort: true},
                 {field: 'userName', width: 200, title: '账户名'},
                 {field: 'role', width: 120, title: '角色'},
                 {field: 'org', width: 300, title: '机构名称'},
@@ -136,12 +136,12 @@
                 {field: 'contacts', width: 80, title: '联系人'},
                 {field: 'phone', width: 200, title: '电话'},
                 // {field: 'remark', width: 100, title: '备注'},
-                {field: 'updateUser', width: 100, title: '更新账号'},
-                {field: 'updateTime', width: 100, title: '更新时间'},
-                {field: 'lastIp', width: 120, title: '最近登录IP'},
-                {field: 'lastTime', width: 135, title: '最近登录时间'},
-                {field: 'loginNumber', width: 100, title: '登录次数'},
-                {field: 'authenticationNumber', width: 120, title: '认证次数'},
+                // {field: 'updateUser', width: 100, title: '更新账号'},
+                // {field: 'updateTime', width: 100, title: '更新时间'},
+                // {field: 'lastIp', width: 120, title: '最近登录IP'},
+                // {field: 'lastTime', width: 135, title: '最近登录时间'},
+                // {field: 'loginNumber', width: 100, title: '登录次数'},
+                // {field: 'authenticationNumber', width: 120, title: '认证次数'},
                 {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
@@ -231,6 +231,8 @@
                                 res = res.page.list;
                                 $("#orgSelect").append("<option value=''>请搜索选择</option>")
                                 for(var i=0;i<res.length;i++){
+                                    if(i < 13)
+                                        continue
                                     $("#orgSelect").append("<option value='"+res[i].id+"'>"+res[i].orgName+"</option>")
                                 }
                                 $('#userNameInput').val(data.userName);
