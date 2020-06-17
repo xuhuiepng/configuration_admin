@@ -24,8 +24,12 @@
 
 
     <resultMap id="SysmUserInfoMap" type="cn.cnic.security.configuration.entity.SysmUserInfo">
-        <association property="sysmUser"  resultMap="userMap">
-
+        <association property="sysmUser"  javaType="cn.cnic.security.configuration.entity.UserEntity">
+            <result property="userId" column="user_id"/>
+            <result property="userName" column="user_name"/>
+            <result property="roleId" column="role_id"/>
+            <result property="orgId" column="org_id"/>
+            <result property="contacts" column="contacts"/>
         </association>
 
         <association property="sysmRole" javaType="cn.cnic.security.configuration.entity.SysmRole">
@@ -35,11 +39,7 @@
         <association property="sysmListOrg" javaType="cn.cnic.security.configuration.entity.SysmListOrg">
             <result property="orgName" column="org_name"/>
             <result property="parentId" column="parent_id"/>
-            <result property="longitude" column="longitude"/>
-            <result property="latitude" column="latitude"/>
         </association>
-
-
     </resultMap>
 
     <select id="findSysmUserInfo"  resultMap="SysmUserInfoMap">

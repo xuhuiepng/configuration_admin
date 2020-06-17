@@ -2,6 +2,7 @@ package cn.cnic.security.configuration.service.impl;
 
 import cn.cnic.security.configuration.dao.UserDao;
 import cn.cnic.security.configuration.entity.AppAuthenticationEntity;
+import cn.cnic.security.configuration.entity.SysmUserInfo;
 import cn.vlabs.umt.oauth.AccessToken;
 import cn.vlabs.umt.oauth.Oauth;
 import cn.vlabs.umt.oauth.UMTOauthConnectException;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+
 import java.util.Properties;
 
 /**
@@ -46,14 +47,14 @@ public class AuthenticationAndAuthorizationServicelImpl {
 
     /**
      * 授权
-     * @param emailAccounts 邮箱账号
+     * @param emailAccount 邮箱账号
      * @return
      */
-    public Map<String ,Object> authorization(String emailAccounts,String appkey){
+    public SysmUserInfo authorization(String emailAccount){
         //1.查询应用表查看是否有权限
         //2.授权
-
-        return null;
+        SysmUserInfo sysmUserInfo = userDao.findSysmUserInfo(emailAccount);
+        return sysmUserInfo;
     }
 
 }
