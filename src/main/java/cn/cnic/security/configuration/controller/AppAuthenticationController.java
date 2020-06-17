@@ -107,6 +107,7 @@ public class AppAuthenticationController {
 
         if(appAuthentication.getAppName()!=null){
             queryWrapper.eq("app_name",appAuthentication.getAppName());
+            queryWrapper.eq("is_del",0);
             if(appAuthenticationService.count(queryWrapper)==0)
                 return R.ok().put("isExist",false);
             else
@@ -115,6 +116,7 @@ public class AppAuthenticationController {
 
         if(appAuthentication.getClientId()!=null){
             queryWrapper.eq("client_id",appAuthentication.getClientId());
+            queryWrapper.eq("is_del",0);
             if(appAuthenticationService.count(queryWrapper)==0)
                 return R.ok().put("isExist",false);
             else
