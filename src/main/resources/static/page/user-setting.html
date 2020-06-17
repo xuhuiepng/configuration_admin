@@ -6,28 +6,21 @@
 
         <div class="layui-form layuimini-form">
             <div class="layui-form-item">
-                <label class="layui-form-label required">管理账号</label>
-                <div class="layui-input-block">
-                    <input type="text" name="username" lay-verify="required" lay-reqtext="管理账号不能为空" placeholder="请输入管理账号"  value="admin" class="layui-input">
-                    <tip>填写自己管理账号的名称。</tip>
-                </div>
-            </div>
-            <div class="layui-form-item">
                 <label class="layui-form-label required">手机</label>
                 <div class="layui-input-block">
-                    <input type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机"  value="" class="layui-input">
+                    <input id="phoneInput" type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机" value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">邮箱</label>
+                <label class="layui-form-label">联系人</label>
                 <div class="layui-input-block">
-                    <input type="email" name="email"  placeholder="请输入邮箱"  value="" class="layui-input">
+                    <input id="contactsInput" type="text" name="contacts" placeholder="请输入联系人" value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">备注信息</label>
                 <div class="layui-input-block">
-                    <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+                    <textarea id="remarkInput" name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
                 </div>
             </div>
 
@@ -43,21 +36,43 @@
     layui.use(['form','miniPage'], function () {
         var form = layui.form,
             layer = layui.layer,
-            miniPage = layui.miniPage;
+            miniPage = layui.miniPage,
+            $ = layui.$;
 
         /**
          * 初始化表单，要加上，不然刷新部分组件可能会不加载
          */
-        form.render();
+         $.ajax({
+            url:"/" + "configuration/user/info/" + sessionStorage.getItem('id'),
+            async:false,
+            success:function(res){
+                data = res.user;
+                $('#contactsInput').val(data.contacts);
+                $('#phoneInput').val(data.phone);
+                $('#remarkInput').val(data.remark);
+                
+                form.render();
+            },
+            error:function(){
+                console.log("出错！");
+            }
+        });
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var index = layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            }, function () {
-                layer.close(index);
-                miniPage.hashHome();
-            });
+            var api = "/" + "configuration/user/update"
+            // console.log(data.field)
+            $.ajax({
+                url: api,
+                async: true,
+                contentType:"application/json",
+                type: "POST",
+                data: JSON.stringify({userId: sessionStorage.getItem('id'), ...data.field}),
+                success: function(res) {
+                    layer.msg("修改成功");
+                    window.location = '../';
+                }
+            })
             return false;
         });
 

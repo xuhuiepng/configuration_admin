@@ -39,37 +39,40 @@
     <div></div>
     <div class="admin-login-background">
         <div class="admin-header">
-            <span>layuimini</span>
+            <span>统一配置中心</span>
         </div>
         <form class="layui-form" action="">
             <div>
                 <i class="layui-icon layui-icon-username admin-icon"></i>
-                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input admin-input admin-input-username" value="admin">
+                <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input admin-input admin-input-username">
             </div>
             <div>
                 <i class="layui-icon layui-icon-password admin-icon"></i>
-                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input admin-input" value="123456">
+                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input admin-input">
             </div>
-            <div>
+            <!-- <div>
                 <input type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" class="layui-input admin-input admin-input-verify" value="xszg">
                 <img class="admin-captcha" width="90" height="30" src="../images/captcha.jpg">
-            </div>
+            </div> -->
             <button class="layui-btn admin-button" lay-submit="" lay-filter="login">登 陆</button>
         </form>
     </div>
 </div>
 <script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
+<script src="../lib/md5.js" charset="utf-8"></script>
 <script>
     layui.use(['form'], function () {
         var form = layui.form,
-            layer = layui.layer;
+            layer = layui.layer,
+            $ = layui.$;
 
         // 登录过期的时候，跳出ifram框架
         if (top.location != self.location) top.location = self.location;
 
+        
+
         // 进行登录操作
         form.on('submit(login)', function (data) {
-            data = data.field;
             if (data.username == '') {
                 layer.msg('用户名不能为空');
                 return false;
@@ -78,13 +81,43 @@
                 layer.msg('密码不能为空');
                 return false;
             }
-            if (data.captcha == '') {
-                layer.msg('验证码不能为空');
-                return false;
-            }
-            layer.msg('登录成功', function () {
-                window.location = '../index.html';
+            var loading = top.layer.msg('登陆中，请稍候',
+                {
+                    icon : 16,
+                    time : false,
+                    shade : 0.8
+                }
+            );
+
+            data.field.password = md5(data.field.password)
+
+            $.ajax({
+                url: "/"+"configuration/index/login",
+                async: false,
+                contentType:"application/json",
+                type: "POST",
+                data: JSON.stringify(data.field),
+                success: function(res) {
+                    if(res.code == 0) {
+                        sessionStorage.setItem('id', res.user.userId)
+                        sessionStorage.setItem("name", res.user.userName)
+                        sessionStorage.setItem("role", res.user.roleId)
+                        top.layer.close(loading);
+                        layer.msg('登录成功', function () {
+                            window.location = '../';
+                        });
+                    }
+                    else {
+                        top.layer.close(loading);
+                        layer.msg(res.msg);
+                    }
+                },
+                error: function(res) {
+                    top.layer.close(loading);
+                    layer.msg("登录错误");
+                }
             });
+            
             return false;
         });
     });

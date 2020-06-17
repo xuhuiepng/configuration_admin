@@ -13,7 +13,7 @@
             <div id="roleIdRadio" class="layui-input-block">
                 <input type="radio" name="roleId" value="1" title="超级管理员" checked="">
                 <input type="radio" name="roleId" value="2" title="研究所网管">
-                <input type="radio" name="roleId" value="3" title="分院网管">
+                <input type="radio" name="roleId" value="3" title="分院网管" disabled>
             </div>
         </div>
         <div class="layui-form-item">
@@ -59,9 +59,15 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label required">本地密码</label>
+            <label class="layui-form-label">重置密码</label>
             <div class="layui-input-block">
-                <input id="passwordInput" type="text" name="localPassword" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                <input id="passwordInput" type="text" name="localPassword" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="localPasswordc" required lay-verify="comfirm" placeholder="请输入密码" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item layui-form-text">

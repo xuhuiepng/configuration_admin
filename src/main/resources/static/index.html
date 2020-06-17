@@ -61,13 +61,13 @@
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
                 <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;">admin</a>
+                    <a id='usernameHref' href="javascript:;">admin</a>
                     <dl class="layui-nav-child">
                         <dd>
                             <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
                         </dd>
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+                            <a href="javascript:;" layuimini-content-href="page/user-password.html" data-title="重置密码" data-icon="fa fa-gears">重置密码</a>
                         </dd>
                         <dd>
                             <hr>
@@ -117,6 +117,7 @@
 </div>
 <script src="lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script src="js/lay-config.js?v=2.0.0" charset="utf-8"></script>
+<script src="lib/md5.js" charset="utf-8"></script>
 <script>
     layui.use(['jquery', 'layer', 'miniAdmin', 'miniTongji'], function () {
         var $ = layui.jquery,
@@ -132,16 +133,30 @@
             multiModule: true,          // 是否开启多模块
             menuChildOpen: false,       // 是否默认展开菜单
             loadingTime: 0,             // 初始化加载时间
-            pageAnim: true,             // 切换菜单动画
+            pageAnim: true             // 切换菜单动画
         };
+
+        if(sessionStorage.getItem('id') == null) {
+            window.location = 'page/login-2.html';
+        }
+        else {
+            $('#usernameHref').text(sessionStorage.getItem('name'))
+        }
+
         miniAdmin.render(options);
 
         $('.login-out').on("click", function () {
+            sessionStorage.removeItem('id')
+            sessionStorage.removeItem('name')
+            sessionStorage.removeItem('role')
             layer.msg('退出登录成功', function () {
-                window.location = 'page/login-1.html';
+                window.location = 'page/login-2.html';
             });
         });
+
+        
     });
+
 </script>
 </body>
 </html>

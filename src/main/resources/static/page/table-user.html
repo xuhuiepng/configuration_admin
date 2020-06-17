@@ -56,6 +56,7 @@
 </div>
 
 <script>
+    var prefix = "/"
     layui.use(['form', 'table','miniPage','element'], function () {
         var $ = layui.jquery,
             form = layui.form,
@@ -73,7 +74,7 @@
                 ids.push(users.userId)
             }
             $.ajax({
-                url: "/configuration/user/delete",
+                url: prefix + "configuration/user/delete",
                 async: false,
                 contentType:"application/json",
                 type: "POST",
@@ -85,15 +86,39 @@
             return success;
         }
 
+        function dealList(list) {
+            res = []
+            if(list.length > 0) {
+                list.forEach((user) => {
+                    if(user.roleId == 1) {
+                        user.role = "超级管理员"
+                    } else if(user.roleId == 2) {
+                        user.role = "研究所网管"
+                    } else if(user.roleId == 3) {
+                        user.role = "分院网管"
+                    }
+                    $.ajax({
+                        url: prefix + "configuration/institutionslist/info/" + user.orgId,
+                        async: false,
+                        success: function(resp) {
+                            user.org = resp.institutionsList.orgName;
+                            res.push(user);
+                        }
+                    });
+                });
+            }
+            return res
+        }
+
         table.render({
             elem: '#userTableId',
-            url: '/configuration/user/list',
+            url: prefix+'configuration/user/list',
             parseData: function(res){ //res 即为原始返回的数据
                 return {
                 "code": res.code, //解析接口状态
                 "msg": res.msg, //解析提示文本
                 "count": res.page.totalCount, //解析数据长度
-                "data": res.page.list //解析数据列表
+                "data": dealList(res.page.list) //解析数据列表
                 };},
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
@@ -105,12 +130,12 @@
                 {type: "checkbox", width: 50},
                 {field: 'userId', width: 80, title: 'ID', sort: true},
                 {field: 'userName', width: 200, title: '账户名'},
-                {field: 'roleId', width: 80, title: '角色'},
-                {field: 'orgId', width: 100, title: '机构ID'},
-                {field: 'orgParentId', width: 140, title: '上级机构ID'},
+                {field: 'role', width: 120, title: '角色'},
+                {field: 'org', width: 300, title: '机构名称'},
+                // {field: 'orgParentId', width: 140, title: '上级机构ID'},
                 {field: 'contacts', width: 80, title: '联系人'},
                 {field: 'phone', width: 200, title: '电话'},
-                {field: 'remark', width: 100, title: '备注'},
+                // {field: 'remark', width: 100, title: '备注'},
                 {field: 'updateUser', width: 100, title: '更新账号'},
                 {field: 'updateTime', width: 100, title: '更新时间'},
                 {field: 'lastIp', width: 120, title: '最近登录IP'},
@@ -120,7 +145,7 @@
                 {title: '操作', minWidth: 150, toolbar: '#userTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
+            limit: 10,
             page: true,
             skin: 'line'
         });
@@ -199,7 +224,7 @@
                     success: function(lay, index) {
                         $("#orgSelect").html("")
                         $.ajax({
-                            url:"/configuration/institutionslist/list?limit=500",
+                            url:prefix + "configuration/institutionslist/list?limit=500",
                             async:true,
                             type:"POST",
                             success:function(res){
@@ -213,8 +238,8 @@
                                 $('#orgParentIdSelect').val(data.orgParentId);
                                 $('#orgSelect').val(data.orgId);
                                 $('#contactsInput').val(data.contacts);
+                                // $('#passwordInput').val(data.localPassword)
                                 $('#phoneInput').val(data.phone);
-                                $('#passwordInput').val(data.localPassword);
                                 $('#remarkInput').val(data.remark);
                                 
                                 form.render();
@@ -223,15 +248,28 @@
                                 console.log("出错！");
                             }
                         });
+                        // 表单密码校验
+                        form.verify({
+                            comfirm: function(value, item){ //value：表单的值、item：表单的DOM对象
+                                if(value !== $('#passwordInput').val()) {
+                                    return "密码不一致"
+                                }
+                            }
+                            
+                        }); 
                         form.on('submit(updateBtn)', function (data) {
-                            var api = "/configuration/user/update"
+                            var api = prefix + "configuration/user/update"
+                            var pw = undefined
+                            if(data.field.localPassword) {
+                                pw = md5(data.field.localPassword)
+                            }
                             // console.log(data.field)
                             $.ajax({
                                 url: api,
                                 async: true,
                                 contentType:"application/json",
                                 type: "POST",
-                                data: JSON.stringify({...obj.data, ...data.field}),
+                                data: JSON.stringify({userId: obj.data.userId, ...data.field,  localPassword: pw, localPasswordc:undefined}),
                                 success: function(res) {
                                     layer.msg("修改成功");
                                     parent.layui.table.reload('userTableId')
