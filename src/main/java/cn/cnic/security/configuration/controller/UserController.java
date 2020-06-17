@@ -1,6 +1,7 @@
 package cn.cnic.security.configuration.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -71,6 +72,7 @@ public class UserController {
     @RequestMapping("/update")
 //    @RequiresPermissions("configuration:user:update")
     public R update(@RequestBody UserEntity user){
+    	user.setUpdateTime(new Date());
 		userService.updateById(user);
 
         return R.ok();
