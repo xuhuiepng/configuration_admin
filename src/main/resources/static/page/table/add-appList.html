@@ -1,0 +1,122 @@
+<div class="layuimini-main">
+
+    <form id="dataFrm" lay-filter="dataFrm" class="layui-form layuimini-form">
+
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">用户</label>
+            <div class="layui-input-inline">
+                <select id="users" name="userId" lay-verify="required" lay-search="" lay-reqtext="用户不能为空">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">应用</label>
+            <div class="layui-input-inline">
+                <select id="apps" name="clientId" lay-verify="required" lay-search="" lay-reqtext="应用不能为空">
+                    <option value="">直接选择或搜索选择</option>
+
+
+                </select>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'table','jquery','layer'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.jquery;
+
+        $(function () {
+            $.ajax({
+                type:"GET",
+                url:"/configuration/applist/users",
+                dataType: "json",
+                async:false,
+                success:function (res) {
+                    var users = res.users;
+                    for(var i = 0;i<users.length;i++){
+                        $("#users").append("<option value="+users[i].userId+">"+users[i].userName+"</option>");
+                    }
+                }
+            });
+
+            $.ajax({
+                type:"GET",
+                url:"/configuration/applist/apps",
+                dataType: "json",
+                async:false,
+                success:function (res) {
+                    var apps = res.apps;
+                    for(var i = 0;i<apps.length;i++){
+                        $("#apps").append("<option value="+apps[i].clientId+">"+apps[i].appName+"</option>");
+                    }
+                }
+            })
+
+
+
+
+        });
+
+
+
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var url = "/configuration/applist/save";
+
+
+            var index =layer.confirm('是否添加权限', {icon: 3, title:'提示'}, function(index){
+                //do something
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code== 0) {
+                            layer.msg("添加成功");
+                            layer.close(index);
+                            layer.close(parentIndex);
+                        }
+                        if(res.code==-1){
+                            layer.msg(res.msg);
+                        }
+                    },
+                    error: function (res) {
+                        layer.msg("添加失败");
+                    }
+                });
+            });
+
+            return false;
+
+        });
+
+    });
+</script>

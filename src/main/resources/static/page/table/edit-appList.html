@@ -1,0 +1,77 @@
+<div class="layuimini-main">
+
+    <form id="dataFrm" method="post" lay-filter="dataFrm" class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">用户名</label>
+            <div class="layui-input-block">
+                <input id="userName" type="text" name="userName" style="background-color:#c2c2c2" readonly="readonly" value="" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">应用</label>
+            <div class="layui-input-inline">
+                <select name="clientId" lay-verify="required" lay-search="" lay-reqtext="">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+layui.use(['form', 'table','jquery','layer'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.jquery;
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var url = "/configuration/institutionslist/save";
+
+
+            var index =layer.confirm('是否添加机构', {icon: 3, title:'提示'}, function(index){
+                //do something
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code== 0) {
+                            layer.msg("添加成功");
+                            layer.close(index);
+                            layer.close(parentIndex);
+                        }
+                    },
+                    error: function (res) {
+                        layer.msg("添加失败");
+                    }
+                });
+            });
+
+            return false;
+
+        });
+
+    });
+</script>

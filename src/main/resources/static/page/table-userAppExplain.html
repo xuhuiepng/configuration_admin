@@ -28,9 +28,8 @@
         </div>
 
 
-        <table id = "currentTableId" class="layui-table"></table>
+        <table id = "currentTableId" style="text-align:center"  class="layui-table"></table>
         <div id = "divPage"></div>
-
 
     </div>
 </div>
@@ -54,18 +53,48 @@
             return hash;
         }
 
+        //转义
+        function escapeJquery(srcString) {
+            // 转义之后的结果
+            var escapseResult = srcString;
+
+            // javascript正则表达式中的特殊字符
+            var jsSpecialChars = ["\\", "^", "$", "*", "?", ".", "+", "(", ")", "[",
+                "]", "|", "{", "}"];
+
+            // jquery中的特殊字符,不是正则表达式中的特殊字符
+            var jquerySpecialChars = ["~", "`", "@", "#", "%", "&", "=", "'", "\"",
+                ":", ";", "<", ">", ",", "/"];
+
+            for (var i = 0; i < jsSpecialChars.length; i++) {
+                escapseResult = escapseResult.replace(new RegExp("\\"
+                    + jsSpecialChars[i], "g"), "\\"
+                    + jsSpecialChars[i]);
+            }
+
+            for (var i = 0; i < jquerySpecialChars.length; i++) {
+                escapseResult = escapseResult.replace(new RegExp(jquerySpecialChars[i],
+                    "g"), "\\" + jquerySpecialChars[i]);
+            }
+
+            return escapseResult;
+        }
+
+
         function col2Row(data){
             var userList = [];
             var _clientList = [];
             var clientList;
+
             var list = data.page.list;
 
             for(var i = 0 ;i<list.length;i++){
                 userList[i] = list[i].userName;
-                _clientList[i] = list[i].clientId;
+                _clientList[i] = list[i].appName;
             }
 
             clientList = unique(_clientList);
+            var _userList = unique(userList);
 
 
             var temp = {};
@@ -81,12 +110,12 @@
             console.log(temp);
 
 
-            ht = "<tr><th></th>"
+            ht = "<tr><th></th>";
             for (var k = 0; k < clientList.length; k++) {
                 var h = '<th>' + clientList[k] + '</th>';
                 ht += h
             }
-            ht += "</tr>"
+            ht += "<th>操作</th></tr>";
             for (var index in temp)  {
                 ht += "<tr><td>" + index + "</td>"
                 for (var m = 0; m < clientList.length; m++) {
@@ -96,9 +125,18 @@
                         ht += "<td></td>"
                     }
                 }
-                ht += "</tr>"
+                ht += "<td>"+
+                    "<button id=\""+index+"\" class=\"layui-btn layui-btn-normal layui-btn-sm\">" + "编辑" +"</button>" +"</td></tr>"
             }
             document.getElementById("currentTableId").innerHTML += ht
+
+            for(let n=0;n<_userList.length;n++){
+                let user = escapeJquery(_userList[n]);
+                $(document).on('click','#'+user,function() {
+                    edit(_userList[n])
+                });
+
+            }
         }
 
 
@@ -138,37 +176,6 @@
             });
         });
 
-
-
-
-
-        // table.render({
-        //     elem: '#currentTableId',
-        //     url: '/configuration/applist/list',
-        //     parseData: function(res){ //res 即为原始返回的数据
-        //         return {
-        //             "code": res.code, //解析接口状态
-        //             "msg": res.msg, //解析提示文本
-        //             "count": res.page.totalCount, //解析数据长度
-        //             "data": res.page.list //解析数据列表
-        //         };},
-        //     toolbar: '#toolbarDemo',
-        //     defaultToolbar: ['filter', 'exports', 'print', {
-        //         title: '提示',
-        //         layEvent: 'LAYTABLE_TIPS',
-        //         icon: 'layui-icon-tips'
-        //     }],
-        //     cols: [[
-        //         {type: "checkbox", width: 50},
-        //         {field: 'userName', width: 200, title: '用户名'},
-        //         {field: 'clientId', width: 150, title: '应用名'},
-        //         {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
-        //     ]],
-        //     limits: [10, 15, 20, 25, 50, 100],
-        //     limit: 10,
-        //     page: true,
-        //     skin: 'line'
-        // });
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
@@ -212,26 +219,8 @@
 
             });
 
-
-
-            // layer.alert(res, {
-            //     title: '最终的搜索信息'
-            // });
-
-            //执行搜索重载
-            // table.reload('currentTableId', {
-            //     page: {
-            //         curr: 1
-            //     },
-            //     where:data.field
-            //
-            // }, 'data');
-
             return false;
         });
-
-
-
 
 
         //添加
@@ -248,6 +237,7 @@
                 area: [openWH[0] + 'px', openWH[1] + 'px'],
                 offset: [openWH[2] + 'px', openWH[3] + 'px'],
                 content: content,
+
                 end: function(){
                     location.reload();
                 }
@@ -257,64 +247,36 @@
             });
         });
 
-        /**
-         * toolbar事件监听
-         */
-        table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('page/table/add-appAuthentication.html');
-                var openWH = miniPage.getOpenWidthHeight();
 
-                var index = layer.open({
-                    title: '添加项目权限',
-                    type: 1,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: [openWH[0] + 'px', openWH[1] + 'px'],
-                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
-                    content: content,
-                    end: function(){
-                        location.reload();
-                    }
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data
-                    ,len = data.length
-                    ,tokens = []
-                    ,url = '';
+        //edit
+        function edit(userName){
+            var content = miniPage.getHrefContent('page/table/edit-appList.html');
+            var openWH = miniPage.getOpenWidthHeight();
+            var user ={
+                userName:userName
+            };
+            var index = layer.open({
+                title: '修改项目权限',
+                type: 1,
+                shade: 0.2,
+                maxmin:true,
+                shadeClose: true,
+                area: [openWH[0] + 'px', openWH[1] + 'px'],
+                offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                content: content,
+                success:function(ayero,index){
+                    form.val("dataFrm",user)
+                },
+                end: function(){
+                    location.reload();
+                }
+            });
+            $(window).on("resize", function () {
+                layer.full(index);
+            });
+        }
 
 
-                for (var i = 0; i < len; i++) {
-                    tokens[i] = data[i]['appToken']
-                };
-
-                layer.confirm('确定删除吗？',function(index){
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(tokens),
-                        dataType: "json",
-                        success: function (res) {
-                            if (res.code== 0) {
-                                layer.msg("删除成功");
-                                table.reload('currentTableId',{});
-                                layer.close(index);
-                            }
-                        },
-                        error: function (res) {
-                            layer.msg("删除失败");
-                        }
-                    });
-                });
-
-            }
-        });
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {

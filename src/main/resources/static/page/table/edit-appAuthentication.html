@@ -13,8 +13,10 @@
         <div class="layui-form-item">
             <label class="layui-form-label required">项目名</label>
             <div class="layui-input-block">
-                <input type="text" name="projectName" lay-verify="required" lay-reqtext="项目名不能为空" placeholder="请输入项目名" value="" class="layui-input">
+                <input type="text" style="background-color:#c2c2c2" name="projectName" readonly="readonly" lay-verify="required" lay-reqtext="项目名不能为空" placeholder="请输入项目名" value="" class="layui-input">
+                <tip>项目名不能修改</tip>
             </div>
+
         </div>
 
         <div class="layui-form-item">
@@ -101,56 +103,6 @@
         // 当前弹出层，防止ID被覆盖
         var parentIndex = layer.index;
 
-
-        // form.verify({
-        //
-        //     appName:function (value) {
-        //         var datas={appName: value};
-        //         var message = '';
-        //         $.ajax({
-        //             type:"POST",
-        //             url:"/configuration/appauthentication/verify",
-        //             async: false, //改为同步请求
-        //             contentType:'application/json;charset=UTF-8',
-        //             data:JSON.stringify(datas),
-        //             dataType:'json',
-        //             success:function(res){
-        //                 if(!res.isExist){
-        //
-        //                 }else{
-        //                     message ="用户名已存在，请重新输入！"
-        //                 }
-        //             }
-        //         });
-        //         //需要注意  需要将返回信息写在ajax方法外
-        //         if (message !== '')
-        //             return message;
-        //     },
-        //
-        //     clientId:function (value) {
-        //         var datas={clientId: value};
-        //         var message = '';
-        //         $.ajax({
-        //             type:"POST",
-        //             url:"/configuration/appauthentication/verify",
-        //             async: false, //改为同步请求
-        //             contentType:'application/json;charset=UTF-8',
-        //             data:JSON.stringify(datas),
-        //             dataType:'json',
-        //             success:function(res){
-        //                 if(!res.isExist){
-        //
-        //                 }else{
-        //                     message ="应用id已存在，请重新输入！"
-        //                 }
-        //             }
-        //         });
-        //         //需要注意  需要将返回信息写在ajax方法外
-        //         if (message !== '')
-        //             return message;
-        //     }
-        //
-        // });
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {

@@ -28,7 +28,7 @@ public class AppAuthenticationServiceImpl extends ServiceImpl<AppAuthenticationD
     public PageUtils queryPage(Map<String, Object> params) {
         QueryWrapper queryWrapper = new QueryWrapper<AppAuthenticationEntity>();
 
-        queryWrapper.eq("is_del",'0'); //过滤已经删除的认证
+        queryWrapper.eq("is_del","0"); //过滤已经删除的认证
 
         if(params.containsKey("appName"))
             queryWrapper.like("app_name",params.get("appName"));
