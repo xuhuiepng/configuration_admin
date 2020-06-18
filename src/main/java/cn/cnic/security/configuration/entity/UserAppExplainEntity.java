@@ -1,5 +1,6 @@
 package cn.cnic.security.configuration.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -21,7 +22,7 @@ public class UserAppExplainEntity implements Serializable {
 	/**
 	 * 
 	 */
-	@TableId
+	@TableId(type= IdType.AUTO)
 	private Integer cId;
 	/**
 	 * 
@@ -34,6 +35,6 @@ public class UserAppExplainEntity implements Serializable {
 	/**
 	 * 停用
 	 */
-	private Enum deactivation;
+	private String deactivation;
 
 }

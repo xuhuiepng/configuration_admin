@@ -104,56 +104,6 @@
         var parentIndex = layer.index;
 
 
-        // form.verify({
-        //
-        //     appName:function (value) {
-        //         var datas={appName: value};
-        //         var message = '';
-        //         $.ajax({
-        //             type:"POST",
-        //             url:"/configuration/appauthentication/verify",
-        //             async: false, //改为同步请求
-        //             contentType:'application/json;charset=UTF-8',
-        //             data:JSON.stringify(datas),
-        //             dataType:'json',
-        //             success:function(res){
-        //                 if(!res.isExist){
-        //
-        //                 }else{
-        //                     message ="用户名已存在，请重新输入！"
-        //                 }
-        //             }
-        //         });
-        //         //需要注意  需要将返回信息写在ajax方法外
-        //         if (message !== '')
-        //             return message;
-        //     },
-        //
-        //     clientId:function (value) {
-        //         var datas={clientId: value};
-        //         var message = '';
-        //         $.ajax({
-        //             type:"POST",
-        //             url:"/configuration/appauthentication/verify",
-        //             async: false, //改为同步请求
-        //             contentType:'application/json;charset=UTF-8',
-        //             data:JSON.stringify(datas),
-        //             dataType:'json',
-        //             success:function(res){
-        //                 if(!res.isExist){
-        //
-        //                 }else{
-        //                     message ="应用id已存在，请重新输入！"
-        //                 }
-        //             }
-        //         });
-        //         //需要注意  需要将返回信息写在ajax方法外
-        //         if (message !== '')
-        //             return message;
-        //     }
-        //
-        // });
-
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             var url = "/configuration/appauthentication/update";
