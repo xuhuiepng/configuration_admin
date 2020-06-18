@@ -225,7 +225,7 @@
 
         //添加
         $("#add").click(function () {
-            var content = miniPage.getHrefContent('page/table/edit-appList.html');
+            var content = miniPage.getHrefContent('page/table/add-appList.html');
             var openWH = miniPage.getOpenWidthHeight();
 
             var index = layer.open({
@@ -250,13 +250,13 @@
 
         //edit
         function edit(userName){
-            var content = miniPage.getHrefContent('page/table/add-appList.html');
+            var content = miniPage.getHrefContent('page/table/edit-appList.html');
             var openWH = miniPage.getOpenWidthHeight();
             var user ={
                 userName:userName
             };
             var index = layer.open({
-                title: '添加项目权限',
+                title: '修改项目权限',
                 type: 1,
                 shade: 0.2,
                 maxmin:true,
