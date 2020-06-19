@@ -11,5 +11,13 @@
         <result property="deactivation" column="deactivation"/>
     </resultMap>
 
+    <update id="activate">
+        UPDATE ca_user_app_explain
+        SET deactivation = '0'
+        WHERE
+            ca_user_app_explain.user_id = #{userId}
+          AND ca_user_app_explain.client_id = #{clientId}
+    </update>
+
 
 </mapper>

@@ -22,12 +22,30 @@
     </resultMap>
 
 
-    <update id="logicDelete" parameterType="java.lang.String">
+    <update id="logicDelete">
         UPDATE app_authentication
         SET is_del = "1"
         WHERE
             app_token = #{token}
     </update>
+    <update id="deactivateUserApp">
+        UPDATE ca_user_app_explain,
+            app_authentication
+        SET ca_user_app_explain.deactivation = '1'
+        WHERE
+            ca_user_app_explain.client_id = app_authentication.client_id
+          AND app_authentication.app_token = #{token}
+    </update>
+    <select id="getUserApp" resultType="java.lang.Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            ca_user_app_explain,
+            app_authentication
+        WHERE
+            ca_user_app_explain.client_id = app_authentication.client_id
+          AND app_authentication.app_token = #{token}
+    </select>
 
 
 </mapper>

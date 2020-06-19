@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.cnic.security.configuration.dao.AppListDao">
+<mapper namespace="cn.cnic.security.configuration.dao.UserAppListDao">
 
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="cn.cnic.security.configuration.entity.AppListEntity" id="AppListMap">
+    <resultMap type="cn.cnic.security.configuration.entity.UserAppListEntity" id="UserAppListMap">
         <result property="cId" column="c_id"/>
         <result property="userId" column="user_id"/>
         <result property="userName" column="user_name"/>
@@ -12,7 +12,8 @@
         <result property="appName" column="app_name"/>
     </resultMap>
 
-    <select id="selectAppListPage" resultMap="AppListMap">
+
+    <select id="selectAppListPage" resultMap="UserAppListMap">
         SELECT
             app.c_id,
             app.user_id,
@@ -40,13 +41,13 @@
                         LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
                 WHERE
                     ca_user_app_explain.c_id IS NOT NULL
-                  AND ca_user_app_explain.deactivation = '1'
+                  AND ca_user_app_explain.deactivation = '0'
             ) AS app,
             app_authentication
         WHERE
             app.client_id = app_authentication.client_id
     </select>
-    <select id="selectAppListPageByUserName" resultMap="AppListMap">
+    <select id="selectAppListPageByUserName" resultMap="UserAppListMap">
         SELECT
             app.c_id,
             app.user_id,
@@ -75,13 +76,20 @@
                         LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
                 WHERE
                     ca_user_app_explain.c_id IS NOT NULL
-                  AND ca_user_app_explain.deactivation = '1'
+                  AND ca_user_app_explain.deactivation = '0'
             ) AS app,
             app_authentication
         WHERE
             app.client_id = app_authentication.client_id
     </select>
 
+    <update id="logicDelete">
+        UPDATE ca_user_app_explain
+        SET deactivation = '1'
+        WHERE
+            ca_user_app_explain.user_id = #{userId}
+          AND ca_user_app_explain.client_id = #{clientId}
+    </update>
 
 </mapper>
 

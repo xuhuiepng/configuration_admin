@@ -17,5 +17,7 @@ import java.util.Map;
 public interface UserAppExplainService extends IService<UserAppExplainEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    Integer activate(Integer userId,Integer clientId);
 }
 

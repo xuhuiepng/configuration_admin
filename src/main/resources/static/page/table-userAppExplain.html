@@ -28,7 +28,7 @@
         </div>
 
 
-        <table id = "currentTableId" style="text-align:center"  class="layui-table"></table>
+        <table id = "currentTableId" style="text-align:center;border-style:none" class="layui-table"></table>
         <div id = "divPage"></div>
 
     </div>
@@ -52,6 +52,7 @@
             }
             return hash;
         }
+
 
         //转义
         function escapeJquery(srcString) {
@@ -110,31 +111,33 @@
             console.log(temp);
 
 
-            ht = "<tr><th></th>";
-            for (var k = 0; k < clientList.length; k++) {
-                var h = '<th>' + clientList[k] + '</th>';
-                ht += h
-            }
-            ht += "<th>操作</th></tr>";
+            var ht = "";
+
             for (var index in temp)  {
                 ht += "<tr><td>" + index + "</td>"
                 for (var m = 0; m < clientList.length; m++) {
                     if (temp[index].indexOf(clientList[m])!==-1) {
-                        ht += "<td>√</td>"
-                    } else {
-                        ht += "<td></td>"
+                        ht += "<td>"+clientList[m]+"<button id=\""+index+clientList[m]+"\" style=\"float:right\" class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete\">删除</button></td>"
                     }
                 }
-                ht += "<td>"+
-                    "<button id=\""+index+"\" class=\"layui-btn layui-btn-normal layui-btn-sm\">" + "编辑" +"</button>" +"</td></tr>"
+                ht += "</tr>"
             }
+
             document.getElementById("currentTableId").innerHTML += ht
 
             for(let n=0;n<_userList.length;n++){
-                let user = escapeJquery(_userList[n]);
-                $(document).on('click','#'+user,function() {
-                    edit(_userList[n])
-                });
+                for(let q = 0;q<clientList.length;q++){
+                    let _delBtnId = _userList[n] + clientList[q];
+
+                    let delBtnId = escapeJquery(_delBtnId);
+                    $(document).on('click','#'+delBtnId,function() {
+                        del(_userList[n],clientList[q])
+                    });
+
+
+
+                }
+
 
             }
         }
@@ -143,7 +146,7 @@
         $(function () {
             $.ajax({
                 type:"GET",
-                url:"/configuration/applist/list",
+                url:"/configuration/userapplist/list",
                 data:{ page: 1, limit: 10 },
                 dataType:"json",
                 success:function (res) {
@@ -158,12 +161,13 @@
                             if (!first) {
                                 $.ajax({
                                     type:"GET",
-                                    url:"/configuration/applist/list",
+                                    url:"/configuration/userapplist/list",
                                     data:{ page: obj.curr, limit: obj.limit},
                                     dataType:"json",
                                     success:function (res) {
                                         document.getElementById("currentTableId").innerHTML = '';
-                                        col2Row(res)
+                                        col2Row(res);
+                                        //form.render("checkbox");
                                     }
 
                                 });
@@ -184,7 +188,7 @@
 
             $.ajax({
                 type:"GET",
-                url:"/configuration/applist/list",
+                url:"/configuration/userapplist/list",
                 data:{ page: 1, limit: 10 ,userName:data.field.userName},
                 dataType:"json",
                 success:function (res) {
@@ -200,7 +204,7 @@
                             if (!first) {
                                 $.ajax({
                                     type:"GET",
-                                    url:"/configuration/applist/list",
+                                    url:"/configuration/userapplist/list",
                                     data:{ page: obj.curr, limit: obj.limit,userName:data.field.userName},
                                     dataType:"json",
                                     success:function (res) {
@@ -225,7 +229,7 @@
 
         //添加
         $("#add").click(function () {
-            var content = miniPage.getHrefContent('page/table/add-appList.html');
+            var content = miniPage.getHrefContent('page/table/add-userAppExplain.html');
             var openWH = miniPage.getOpenWidthHeight();
 
             var index = layer.open({
@@ -248,101 +252,39 @@
         });
 
 
-        //edit
-        function edit(userName){
-            var content = miniPage.getHrefContent('page/table/edit-appList.html');
-            var openWH = miniPage.getOpenWidthHeight();
-            var user ={
-                userName:userName
-            };
-            var index = layer.open({
-                title: '修改项目权限',
-                type: 1,
-                shade: 0.2,
-                maxmin:true,
-                shadeClose: true,
-                area: [openWH[0] + 'px', openWH[1] + 'px'],
-                offset: [openWH[2] + 'px', openWH[3] + 'px'],
-                content: content,
-                success:function(ayero,index){
-                    form.val("dataFrm",user)
-                },
-                end: function(){
-                    location.reload();
-                }
+        //del
+        function del(userName,appName){
+
+            var data = {userName:userName,appName:appName};
+            layer.confirm('真的删除'+userName+'的'+appName+'的权限吗？',function() {
+                $.ajax({
+                    type:"POST",
+                    url:"/configuration/userapplist/delete",
+                    contentType: "application/json; charset=utf-8",
+                    data:JSON.stringify(data),
+                    dataType:"json",
+                    success:function (res) {
+                        if(res.code===-1){
+                            layer.msg(res.msg);
+                        }
+                        if (res.code===0){
+                            layer.alert('删除成功', {icon: 1},function(index){
+                                layer.close(index);
+                                location.reload();
+                            });
+
+                        }
+                    }
+                });
             });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
+
         }
 
 
 
-        //监听表格复选框选择
-        table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
-        });
-
-        table.on('tool(currentTableFilter)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'edit') {
-                $.get(""+data.appToken,function(res){
-                    var content = miniPage.getHrefContent('page/table/edit-appAuthentication.html');
-                    var openWH = miniPage.getOpenWidthHeight();
-
-                    var index = layer.open({
-                        title: '编辑用户',
-                        type: 1,
-                        shade: 0.2,
-                        maxmin:true,
-                        shadeClose: true,
-                        area: [openWH[0] + 'px', openWH[1] + 'px'],
-                        offset: [openWH[2] + 'px', openWH[3] + 'px'],
-                        content: content,
-                        success: function(layero,index){
-                            form.val("dataFrm",res.appAuthentication)
-                        },
-                        end: function(){
-                            //location.reload()
-                            table.reload('currentTableId',{});
-                        }
 
 
-                    });
 
-                    $(window).on("resize", function () {
-                        layer.full(index);
-                    });
-                });
-                return false;
-
-            } else if (obj.event === 'delete') {
-                var url = '';
-
-                layer.confirm('真的删除行么', function (index) {
-
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify([data.appToken]),
-                        dataType: "json",
-                        success: function (res) {
-                            if (res.code == 0) {
-                                layer.msg("删除成功");
-                                obj.del();
-                                layer.close(index);
-                            }
-                        },
-                        error: function (res) {
-                            layer.msg("删除失败");
-                        }
-                    });
-
-
-                });
-            }
-        });
 
     });
 </script>

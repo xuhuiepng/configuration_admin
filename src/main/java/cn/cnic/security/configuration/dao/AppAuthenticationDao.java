@@ -4,6 +4,7 @@ package cn.cnic.security.configuration.dao;
 import cn.cnic.security.configuration.entity.AppAuthenticationEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,7 +20,11 @@ import java.util.List;
 @Repository
 public interface AppAuthenticationDao extends BaseMapper<AppAuthenticationEntity> {
 
-    int logicDelete(String token);
+    int logicDelete(@Param("token") String token);
+
+    int getUserApp(@Param("token") String token);
+
+    int deactivateUserApp(@Param("token") String token);
 
 }
 

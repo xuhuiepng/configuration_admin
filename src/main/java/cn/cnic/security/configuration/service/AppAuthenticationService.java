@@ -18,7 +18,7 @@ public interface AppAuthenticationService extends IService<AppAuthenticationEnti
 
     PageUtils queryPage(Map<String, Object> params);
 
-    void logicDelete(List<String> tokenList);
+    void logicDelete(List<String> tokenList) throws Exception;
 }
 
 

@@ -15,7 +15,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 
 import cn.cnic.security.configuration.entity.AppAuthenticationEntity;
-
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("appAuthenticationService")
@@ -48,10 +48,20 @@ public class AppAuthenticationServiceImpl extends ServiceImpl<AppAuthenticationD
     }
 
     @Override
-    public void logicDelete(List<String> tokenList) {
+    @Transactional(rollbackFor = Exception.class)
+    public void logicDelete(List<String> tokenList) throws Exception{
 
         for(String token:tokenList){
-            appAuthenticationDao.logicDelete(token);
+            int delCount = appAuthenticationDao.logicDelete(token);
+            if(delCount>0){
+                int userAppCount = appAuthenticationDao.getUserApp(token);
+                if(userAppCount>0){
+                    int deActivateCount = appAuthenticationDao.deactivateUserApp(token);
+                    if(deActivateCount==0) throw new Exception("app权限更新失败");
+                }
+            }else{
+                throw new Exception("app删除失败");
+            }
         }
 
     }

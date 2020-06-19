@@ -96,7 +96,13 @@ public class AppAuthenticationController {
 //    @RequiresPermissions("configuration:appauthentication:delete")
     public R delete(@RequestBody String[] appTokens){
         //appAuthenticationService.removeByIds(Arrays.asList(appTokens));
-        appAuthenticationService.logicDelete(Arrays.asList(appTokens));
+
+        try{
+            appAuthenticationService.logicDelete(Arrays.asList(appTokens));
+
+        }catch(Exception e){
+            return  R.error(-1,"删除失败");
+        }
         return R.ok();
     }
 

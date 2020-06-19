@@ -45,7 +45,7 @@
         $(function () {
             $.ajax({
                 type:"GET",
-                url:"/configuration/applist/users",
+                url:"/configuration/userapplist/users",
                 dataType: "json",
                 async:false,
                 success:function (res) {
@@ -58,7 +58,7 @@
 
             $.ajax({
                 type:"GET",
-                url:"/configuration/applist/apps",
+                url:"/configuration/userapplist/apps",
                 dataType: "json",
                 async:false,
                 success:function (res) {
@@ -87,7 +87,7 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var url = "/configuration/applist/save";
+            var url = "/configuration/userapplist/save";
 
 
             var index =layer.confirm('是否添加权限', {icon: 3, title:'提示'}, function(index){

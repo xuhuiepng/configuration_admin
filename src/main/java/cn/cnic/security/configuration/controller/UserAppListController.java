@@ -3,11 +3,11 @@ package cn.cnic.security.configuration.controller;
 import cn.cnic.security.common.utils.PageUtils;
 import cn.cnic.security.common.utils.R;
 import cn.cnic.security.configuration.entity.AppAuthenticationEntity;
-import cn.cnic.security.configuration.entity.AppListEntity;
+import cn.cnic.security.configuration.entity.UserAppListEntity;
 import cn.cnic.security.configuration.entity.UserAppExplainEntity;
 import cn.cnic.security.configuration.entity.UserEntity;
 import cn.cnic.security.configuration.service.AppAuthenticationService;
-import cn.cnic.security.configuration.service.AppListService;
+import cn.cnic.security.configuration.service.UserAppListService;
 import cn.cnic.security.configuration.service.UserAppExplainService;
 import cn.cnic.security.configuration.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Wrapper;
 import java.util.*;
 
 @RestController
-@RequestMapping("configuration/applist")
-public class AppListController {
+@RequestMapping("configuration/userapplist")
+public class UserAppListController {
     @Autowired
-    private  AppListService appListService;
+    private UserAppListService userAppListService;
 
     @Autowired
     private UserService userService;
@@ -43,7 +42,7 @@ public class AppListController {
         int pageSize = 10;
         int currPage = 1;
 
-        List<AppListEntity> appList = new ArrayList<>();
+        List<UserAppListEntity> appList = new ArrayList<>();
 
         if(params.containsKey("limit"))
             pageSize = Integer.parseInt((String)params.get("limit"));
@@ -52,14 +51,14 @@ public class AppListController {
             currPage = Integer.parseInt((String)params.get("page"));
 
         if(params.containsKey("userName"))
-            appList.addAll(appListService.queryAppListPageByUserName(pageSize,currPage,(String)params.get("userName")));
+            appList.addAll(userAppListService.queryAppListPageByUserName(pageSize,currPage,(String)params.get("userName")));
         else
-            appList.addAll(appListService.queryAppListPage(pageSize,currPage));
+            appList.addAll(userAppListService.queryAppListPage(pageSize,currPage));
 
 
         Set<String> userNameSet = new HashSet<>();
 
-        for(AppListEntity temp:appList){
+        for(UserAppListEntity temp:appList){
             userNameSet.add(temp.getUserName());
         }
 
@@ -97,13 +96,35 @@ public class AppListController {
         Integer count = userAppExplainService.count(queryWrapper);
 
         if(count==1){
-            return R.error(-1,"用户权限重复添加");
+            queryWrapper.eq("deactivation","1");
+            count = userAppExplainService.count(queryWrapper);
+            if(count==1){
+                userAppExplainService.activate(userAppExplainEntity.getUserId(),userAppExplainEntity.getClientId());
+            }else{
+                return R.error(-1,"用户权限重复添加");
+            }
+        }else{
+            userAppExplainEntity.setDeactivation("0");
+            userAppExplainService.save(userAppExplainEntity);
+        }
+        return R.ok();
+    }
+
+    @RequestMapping("delete")
+    public R delete(@RequestBody UserAppListEntity userAppListEntity){
+        QueryWrapper<AppAuthenticationEntity> appQuery = new QueryWrapper<>();
+        QueryWrapper<UserEntity> userQuery = new QueryWrapper<>();
+        appQuery.eq("app_name", userAppListEntity.getAppName());
+        userQuery.eq("user_name", userAppListEntity.getUserName());
+        Integer userId = userService.getOne(userQuery).getUserId();
+        Integer clientId = appAuthenticationService.getOne(appQuery).getClientId();
+        Integer count = userAppListService.LogicDelete(userId,clientId);
+        if(count==0){
+            return R.error(-1,"删除失败");
         }
 
-        userAppExplainEntity.setDeactivation("1");
-        userAppExplainService.save(userAppExplainEntity);
-
         return R.ok();
+
     }
 
 
