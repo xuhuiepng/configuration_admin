@@ -56,8 +56,19 @@
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
         <script type="text/html" id="currentTableBar">
+
+
+            {{#  if(d.isDel == 1){ }}
+            <a class="layui-btn layui-btn-xs layui-btn-disabled">失效</a>
+            {{#  } }}
+
+            {{#  if(d.isDel == 0){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="read">查看详情</a>
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+
+            {{#  } }}
+
         </script>
 
     </div>
@@ -86,25 +97,45 @@
                 layEvent: 'LAYTABLE_TIPS',
                 icon: 'layui-icon-tips'
             }],
+
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'appName', width: 150, title: '名称'},
-                {field: 'bingIp', width: 150, title: '绑定ip'},
-                {field: 'domain', width: 150, title: '域名'},
-                {field: 'updateTime', width: 200, title: '更新时间'},
-                {field: 'num', width: 100, title: '认证次数'},
-                {field: 'clientId', Width: 120, title: '客户端ID'},
-                {field: 'expiresIn', width: 120, title: '过期时间/ms'},
-                {field: 'redirectUri', width: 150, title: '回调地址'},
-                {field: 'accessTokenUrl', width: 200, title: '认证服务器地址'},
-                {field: 'projectName', width: 150, title: '项目名'},
-                {field: 'theme', width: 150, title: '主题'},
+                {field: 'appName', width: 260, title: '名称', align: "center"},
+                {field: 'bingIp', width: 260, title: '绑定ip', align: "center"},
+                {field: 'clientId', Width: 260, title: '客户端ID', align: "center"},
+                {field: 'redirectUri', width: 260, title: '回调地址', align: "center"},
+                {field: 'projectName', width: 260, title: '项目名', align: "center"},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
+            initSort: {
+                field: 'clientId' //排序字段，对应 cols 设定的各字段名
+                ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+            },
             limits: [10, 15, 20, 25, 50, 100],
             limit: 10,
             page: true,
             skin: 'line'
+            ,done: function (res, curr, count) {
+                var state = "";
+                console.log(res.data);
+                for (var i in res.data) {
+                    var item = res.data[i];
+                    if (item.isDel === 1 ) {// 这里是判断需要禁用的条件（如：状态为0的）
+                        // checkbox 根据条件设置不可选中
+                        $('tr[data-index=' + i + '] input[type="checkbox"]').prop('disabled', true);
+                        state = "1";// 隐藏表头全选判断状态
+                        form.render();// 重新渲染一下
+                    }
+                }
+
+                if(state === "1"){
+                    // 根据条件移除全选 checkbox
+                    $('th[data-field=0] div').replaceWith('<div class="layui-table-cell laytable-cell-5-0-0"><span></span></div>');
+                }else {
+                    //翻页显示全选按钮 checkbox
+                    $('th[data-field=0] div').replaceWith('<div class="layui-table-cell laytable-cell-1-0-0 laytable-cell-checkbox"><input type="checkbox" name="layTableCheckbox" lay-skin="primary" lay-filter="layTableAllChoose"><div class="layui-unselect layui-form-checkbox" lay-skin="primary"><i class="layui-icon layui-icon-ok"></i></div></div>');
+                }
+            }
         });
 
         // 监听搜索操作
@@ -144,7 +175,7 @@
                     offset: [openWH[2] + 'px', openWH[3] + 'px'],
                     content: content,
                     end: function(){
-                        location.reload();
+                        table.reload('currentTableId',{});
                     }
                 });
                 $(window).on("resize", function () {
@@ -187,7 +218,7 @@
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
+            console.log(obj);
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
@@ -237,7 +268,7 @@
                         success: function (res) {
                             if (res.code === 0) {
                                 layer.msg("删除成功");
-                                obj.del();
+                                table.reload('currentTableId',{});
                                 layer.close(index);
                             }
                             if(res.code===-1){
@@ -250,6 +281,23 @@
                     });
 
 
+                });
+            }else if(obj.event === 'read'){
+                var htmlContent = "<div>名称："+data.appName+"</div>"+
+                        "<div>项目名："+data.projectName+"</div>"+
+                    "<div>绑定ip："+data.bingIp+"</div>"+
+                    "<div>域名："+data.domain+"</div>"+
+                    "<div>过期时间："+data.expiresIn+"/ms</div>"+
+                    "<div>应用id："+data.clientId+"</div>"+
+                    "<div>密钥："+data.clientSecret+"</div>"+
+                    "<div>应用回调地址："+data.redirectUri+"</div>"+
+                    "<div>认证服务器地址："+data.accessTokenUrl+"</div>"+
+                    "<div>接入主题："+data.theme+"</div>"+
+                    "<div>认证次数："+data.num+"</div>";
+                layer.open({
+                    title:"查看详情",
+                    content:htmlContent,
+                    btn: ['关闭']
                 });
             }
         });

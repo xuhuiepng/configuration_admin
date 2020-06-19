@@ -75,4 +75,6 @@ public class AppAuthenticationEntity implements Serializable {
 	 */
 	private Integer isDel;
 
+	private Integer expiresIn;
+
 }
