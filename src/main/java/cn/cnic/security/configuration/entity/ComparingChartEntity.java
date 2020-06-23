@@ -22,11 +22,11 @@ public class ComparingChartEntity implements Serializable {
 	/**
 	 * 
 	 */
+	@TableId
 	private Integer id;
 	/**
 	 * 邮箱后缀
 	 */
-	@TableId
 	private String suffix;
 	/**
 	 * 简称

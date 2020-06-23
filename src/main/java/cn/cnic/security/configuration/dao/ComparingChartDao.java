@@ -14,4 +14,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface ComparingChartDao extends BaseMapper<ComparingChartEntity> {
 	
+	int queryMaxId();
+	
 }

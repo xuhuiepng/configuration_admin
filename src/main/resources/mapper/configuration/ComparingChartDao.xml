@@ -13,6 +13,8 @@
         <result property="longitude" column="longitude"/>
         <result property="belongTo" column="belong_to"/>
     </resultMap>
-
+	<select id="queryMaxId" resultType="Integer">
+		select Max(id) as id from comparing_chart
+	</select>
 
 </mapper>
