@@ -42,10 +42,9 @@ this is a callback page!
                 appKey:45148
             };
             $.ajax({
-                type:"POST",
+                type:"GET",
                 url:"/sso/authentication",
-                contentType: "application/json; charset=utf-8",
-                data:JSON.stringify(data),
+                data:data,
                 dataType:"json",
                 success:function (res) {
                     if(res.code===1||res.code===5){

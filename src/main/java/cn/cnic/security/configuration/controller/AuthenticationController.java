@@ -19,7 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,8 +46,8 @@ public class AuthenticationController {
      *
      * @return
      */
-    @PostMapping(value = {"sso/authentication"})
-    public R authentication(HttpServletRequest request,String code , Integer appKey){
+    @GetMapping(value = {"sso/authentication"})
+    public R authentication(HttpServletRequest request, String code , Integer appKey){
         if(StringUtils.isEmpty(code) && appKey != null){
             return R.error(1,"参数为空");
         }
