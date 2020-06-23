@@ -18,5 +18,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserDao extends BaseMapper<UserEntity> {
     //授权用的查找
-    SysmUserInfo findSysmUserInfo(@Param("username") String username);
+    SysmUserInfo findSysmUserInfo(String username);
 }

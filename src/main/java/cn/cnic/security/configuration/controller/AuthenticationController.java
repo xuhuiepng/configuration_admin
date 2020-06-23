@@ -63,6 +63,7 @@ public class AuthenticationController {
         QueryWrapper<AppAuthenticationEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("client_id", appKey);
         AppAuthenticationEntity entity = authenticationService.getOne(queryWrapper);
+//        log.info("AppAuthenticationEntity = {}",JacksonUtils.obj2String(entity));
         R r = null;
         //发现appkey不存在
         if(entity == null ){
@@ -73,7 +74,7 @@ public class AuthenticationController {
         try {
             //科技云通行证认证
             AccessToken accessToken = authenticationAndAuthorizationServicel.authentication(request, entity);
-            log.info("科技云认证 {} {}", IPUtils.getIpAddr(request), accessToken.toString());
+//            log.info("科技云认证 {} {}", IPUtils.getIpAddr(request), JacksonUtils.obj2String(accessToken));
             if(StringUtils.equals("active",accessToken.getUserInfo().getCstnetIdStatus())){
                 //通行证账号也就是邮箱
                 String cstnetId = accessToken.getUserInfo().getCstnetId();
@@ -87,12 +88,12 @@ public class AuthenticationController {
             }
         } catch (UMTOauthConnectException e) {
             r=R.error(5,"Oauth2.0认证异常");
-            log.warn("{}",e);
+            log.warn(" ",e);
         } catch (OAuthProblemException e) {
             r=R.error(5,e.getMessage());
-            log.warn("{}",e);
+            log.warn("{} {} {}",IPUtils.getIpAddr(request),code,e.getMessage());
         }
-
+        log.info("authentication --> {}",JacksonUtils.obj2String(r));
         return r;
     }
 

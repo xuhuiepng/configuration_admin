@@ -21,7 +21,7 @@ public class SysmUserInfo  {
 	/**
 	 * 系统用户
 	 */
-	private SysmUser sysmUser;
+	private UserEntity sysmUser;
 	/**
 	 * 系统权限
 	 */
@@ -31,11 +31,11 @@ public class SysmUserInfo  {
 	 */
 	private SysmListOrg sysmListOrg;
 
-	public SysmUser getSysmUser() {
+	public UserEntity getSysmUser() {
 		return sysmUser;
 	}
 
-	public void setSysmUser(SysmUser sysmUser) {
+	public void setSysmUser(UserEntity sysmUser) {
 		this.sysmUser = sysmUser;
 	}
 
