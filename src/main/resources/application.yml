@@ -1,5 +1,5 @@
 server:
-  port: 12990
+  port: 12950
 
 # mysql
 spring:
@@ -48,6 +48,12 @@ spring:
   resources:
     static-locations: classpath:/static/,classpath:/views/
 
+  mvc:
+    view:
+      suffix: .html
+    static-path-pattern: /**
+
+
 mybatis-plus:
   mapperLocations: classpath:mapper/**/*.xml
 
@@ -57,3 +63,4 @@ jwt:
   # token有效时长，7天，单位秒
   expire: 604800
   header: token
+
