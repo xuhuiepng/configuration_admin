@@ -18,12 +18,21 @@ public class ComparingChartServiceImpl extends ServiceImpl<ComparingChartDao, Co
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
+    	QueryWrapper<ComparingChartEntity> query = new QueryWrapper<ComparingChartEntity>();
+    	if(params.containsKey("fullname")) {
+    		query.eq("fullname", params.get("fullname"));
+    	}
         IPage<ComparingChartEntity> page = this.page(
                 new Query<ComparingChartEntity>().getPage(params),
-                new QueryWrapper<ComparingChartEntity>()
+                query
         );
 
         return new PageUtils(page);
+    }
+    
+    @Override
+    public int getMaxId() {
+    	return this.baseMapper.queryMaxId();
     }
 
 }

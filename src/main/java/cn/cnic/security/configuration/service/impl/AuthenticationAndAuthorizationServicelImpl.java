@@ -1,5 +1,6 @@
 package cn.cnic.security.configuration.service.impl;
 
+import cn.cnic.security.configuration.dao.AuthorizationDao;
 import cn.cnic.security.configuration.dao.UserDao;
 import cn.cnic.security.configuration.entity.AppAuthenticationEntity;
 import cn.cnic.security.configuration.entity.SysmUserInfo;
@@ -27,6 +28,9 @@ public class AuthenticationAndAuthorizationServicelImpl {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private AuthorizationDao authorizationDao;
+
     /**
      * 科技云认证
      * @param request
@@ -47,14 +51,20 @@ public class AuthenticationAndAuthorizationServicelImpl {
 
     /**
      * 授权
+     *
+     * @param appKey
      * @param emailAccount 邮箱账号
      * @return
      */
-    public SysmUserInfo authorization(String emailAccount){
+    public SysmUserInfo authorization(Integer appKey, String emailAccount){
         //1.查询应用表查看是否有权限
-        //2.授权
-        SysmUserInfo sysmUserInfo = userDao.findSysmUserInfo(emailAccount);
-        return sysmUserInfo;
+        SysmUserInfo sysmUserInfo = authorizationDao.findDeactivation(appKey,emailAccount);
+        if(sysmUserInfo!=null) {//说明查到了有权限的信息
+            return sysmUserInfo;
+        }else{
+            //2.授权
+            sysmUserInfo = userDao.findSysmUserInfo(emailAccount);
+            return sysmUserInfo;
+        }
     }
-
 }

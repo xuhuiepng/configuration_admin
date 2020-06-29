@@ -48,10 +48,10 @@ public class ComparingChartController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{suffix}")
+    @RequestMapping("/info/{id}")
 //    @RequiresPermissions("configuration:comparingchart:info")
-    public R info(@PathVariable("suffix") String suffix){
-		ComparingChartEntity comparingChart = comparingChartService.getById(suffix);
+    public R info(@PathVariable("id") int id){
+		ComparingChartEntity comparingChart = comparingChartService.getById(id);
 
         return R.ok().put("comparingChart", comparingChart);
     }
@@ -62,6 +62,7 @@ public class ComparingChartController {
     @RequestMapping("/save")
 //    @RequiresPermissions("configuration:comparingchart:save")
     public R save(@RequestBody ComparingChartEntity comparingChart){
+    	comparingChart.setId(comparingChartService.getMaxId() + 1);
 		comparingChartService.save(comparingChart);
 
         return R.ok();

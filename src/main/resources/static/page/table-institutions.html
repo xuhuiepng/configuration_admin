@@ -70,6 +70,29 @@
             table = layui.table,
             miniPage = layui.miniPage;
 
+        function addSuffix(list) {
+            res = []
+            if(list.length > 0) {
+                list.forEach((inst) => {
+                    $.ajax({
+                        url: "/configuration/comparingchart/list",
+                        data: {fullname:inst.orgName},
+                        async: false,
+                        success: function(resp) {
+                            inst.suffix = ''
+                            if(resp.page.list.length > 0) {
+                                resp.page.list.forEach((item) => {
+                                    inst.suffix = inst.suffix + (inst.suffix.length === 0 ? '' : ', ') + item.suffix
+                                })
+                            }
+                            res.push(inst);
+                        }
+                    });
+                });
+            }
+            return res
+        }
+
         table.render({
             elem: '#currentTableId',
             url: '/configuration/institutionslist/list',
@@ -78,7 +101,7 @@
                 "code": res.code, //解析接口状态
                 "msg": res.msg, //解析提示文本
                 "count": res.page.totalCount, //解析数据长度
-                "data": res.page.list //解析数据列表
+                "data": addSuffix(res.page.list) //解析数据列表
                 };},
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
@@ -94,6 +117,7 @@
                 {field: 'longitude', width: 150, title: '经度'},
                 {field: 'latitude', width: 150, title: '纬度'},
                 {field: 'ipScope', Width: 200, title: 'ipScope'},
+                {field: 'suffix', Width: 200, title: '邮箱后缀'},
                 {field: 'createTime', width: 200, title: '创立时间', sort: true},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
@@ -193,6 +217,19 @@
                     var content = miniPage.getHrefContent('page/table/edit-institution.html');
                     var openWH = miniPage.getOpenWidthHeight();
 
+                    function generateSecond(list) {
+                        if (list === null || list.length <= 0) {
+                            return;
+                        } else {
+                            for (var x in list) {
+                                var html = " <div class=\"layui-input-block\">\n" +
+                                "                <input type=\"input\" name=\"oldSecondCategory\" id=\"" + list[x].id + "\" + value=\"" + list[x].suffix + "\" lay-verify=\"required\" class=\"layui-input\">\n" +
+                                "              </div>";
+                                $("#appendSecond").append(html);
+                            }
+                        }
+                    }
+
                     var index = layer.open({
                         title: '编辑用户',
                         type: 1,
@@ -203,7 +240,16 @@
                         offset: [openWH[2] + 'px', openWH[3] + 'px'],
                         content: content,
                         success: function(layero,index){
+                            $.ajax({
+                                url: "/configuration/comparingchart/list",
+                                data: {fullname:res.institutionsList.orgName},
+                                async: false,
+                                success: function(resp) {
+                                    generateSecond(resp.page.list)
+                                }
+                            });
                             form.val("dataFrm",res.institutionsList)
+                            form.render()
                         },
                         end: function(){
                             //location.reload()

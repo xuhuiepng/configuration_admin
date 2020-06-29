@@ -69,6 +69,17 @@
                 <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息" value="" ></textarea>
             </div>
         </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱后缀</label>
+            <div id="appendSecond"></div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-inline">
+                <input type='button' class="layui-btn layui-btn-sm layui-btn-primary" id="add" value="+ 添加邮箱后缀"/>
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -92,9 +103,44 @@
         // 当前弹出层，防止ID被覆盖
         var parentIndex = layer.index;
 
+        var spotMax = 0;
+        $("#add").click(function () {
+            var html = " <div class=\"layui-input-block\" id=\"secondCategory\">\n" +
+                "                <input type=\"input\" id=\"generate" + spotMax + "\" name=\"newSecondCategory\" lay-verify=\"required\" class=\"layui-input\"\n" +
+                "              </div>";
+            $("#appendSecond").append(html);
+            spotMax++;
+        });
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             var url = "/configuration/institutionslist/update";
+
+            var newSecondCategory = [];
+            $("input[name='newSecondCategory']").each(function () {
+                var item = {
+                    suffix: $(this).val(),
+                    abbreviation: data.field.abbreviation,
+                    fullname: data.field.orgName,
+                    latitude: data.field.latitude,
+                    longitude: data.field.longitude,
+                    belongTo: $("option[value="+data.field.parentId+"]").text()
+                }
+                newSecondCategory.push(item);
+            });
+            var oldSecondCategory = [];
+            $("input[name='oldSecondCategory']").each(function () {
+                var item = {
+                    id: $(this).attr("id"),
+                    suffix: $(this).val(),
+                    abbreviation: data.field.abbreviation,
+                    fullname: data.field.orgName,
+                    latitude: data.field.latitude,
+                    longitude: data.field.longitude,
+                    belongTo: $("option[value="+data.field.parentId+"]").text()
+                }
+                oldSecondCategory.push(item);
+            });
 
             var index =layer.confirm('是否修改机构', {icon: 3, title:'提示'}, function(index){
                 //do something
@@ -115,6 +161,36 @@
                         layer.msg("修改失败");
                     }
                 });
+                if(oldSecondCategory.length > 0) {
+                    oldSecondCategory.forEach((item) => {
+                        $.ajax({
+                            type: "POST",
+                            url: "/configuration/comparingchart/update",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify(item),
+                            dataType: "json",
+                            success: function (res) {
+
+                            },
+                            error: function (res) {
+
+                            }
+                        }); 
+                    });
+                }
+                if(newSecondCategory.length > 0) {
+                    newSecondCategory.forEach((item) => {
+                        $.ajax({
+                            url: "/configuration/comparingchart/save",
+                            async: true,
+                            contentType:"application/json",
+                            type: "POST",
+                            data: JSON.stringify(item),
+                            success: function(res) {
+                            }
+                        })
+                    })
+                }
             });
 
             return false;

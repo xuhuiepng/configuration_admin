@@ -16,5 +16,7 @@ import java.util.Map;
 public interface ComparingChartService extends IService<ComparingChartEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+    
+    int getMaxId();
 }
 
