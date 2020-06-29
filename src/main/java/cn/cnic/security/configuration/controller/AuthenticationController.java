@@ -79,10 +79,11 @@ public class AuthenticationController {
                 //通行证账号也就是邮箱
                 String cstnetId = accessToken.getUserInfo().getCstnetId();
                 //后台认证+授权
-                SysmUserInfo sysmUserInfo = authenticationAndAuthorizationServicel.authorization(appKey,cstnetId);
-                if(sysmUserInfo==null){
-                    return R.error(6, "帐户激活失败(未查到帐户)");
+                SysmUserInfo findDeactivation = authenticationAndAuthorizationServicel.findDeactivation(appKey, cstnetId);
+                if(findDeactivation==null){
+                    return R.error(6, "帐户未获得权限");
                 }
+                SysmUserInfo sysmUserInfo = authenticationAndAuthorizationServicel.authorization(appKey,cstnetId);
                 String userJson = JacksonUtils.obj2String(sysmUserInfo);
                 String token = jwtUtils.generateToken(userJson);
                 r = R.ok().put("token",token);

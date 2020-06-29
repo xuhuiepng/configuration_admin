@@ -50,6 +50,18 @@ public class AuthenticationAndAuthorizationServicelImpl {
     }
 
     /**
+     * 认证
+     *
+     * @param appKey
+     * @param emailAccount 邮箱账号
+     * @return
+     */
+    public SysmUserInfo findDeactivation(Integer appKey, String emailAccount) {
+        //1.查询应用表查看是否有权限
+        SysmUserInfo findDeactivation = authorizationDao.findDeactivation(appKey,emailAccount);
+        return findDeactivation;
+    }
+    /**
      * 授权
      *
      * @param appKey
@@ -57,14 +69,10 @@ public class AuthenticationAndAuthorizationServicelImpl {
      * @return
      */
     public SysmUserInfo authorization(Integer appKey, String emailAccount){
-        //1.查询应用表查看是否有权限
-        SysmUserInfo sysmUserInfo = authorizationDao.findDeactivation(appKey,emailAccount);
-        if(sysmUserInfo!=null) {//说明查到了有权限的信息
-            return sysmUserInfo;
-        }else{
-            //2.授权
-            sysmUserInfo = userDao.findSysmUserInfo(emailAccount);
-            return sysmUserInfo;
-        }
+        //2.授权
+        SysmUserInfo sysmUserInfo = userDao.findSysmUserInfo(emailAccount);
+        return sysmUserInfo;
     }
+
+
 }
