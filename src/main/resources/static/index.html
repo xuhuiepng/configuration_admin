@@ -118,6 +118,7 @@
 <script src="lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script src="js/lay-config.js?v=2.0.0" charset="utf-8"></script>
 <script src="lib/md5.js" charset="utf-8"></script>
+<script src="lib/js.cookie.js" charset="utf-8"></script>
 <script>
     layui.use(['jquery', 'layer', 'miniAdmin', 'miniTongji'], function () {
         var $ = layui.jquery,
@@ -136,19 +137,19 @@
             pageAnim: true             // 切换菜单动画
         };
 
-        // if(sessionStorage.getItem('id') == null) {
-        //     window.location = 'page/login-2.html';
-        // }
-        // else {
-        //     $('#usernameHref').text(sessionStorage.getItem('name'))
-        // }
+        if(Cookies.get('userId') == null) {
+            window.location = 'page/login-2.html';
+        }
+        else {
+            $('#usernameHref').text(Cookies.get('userName'))
+        }
 
         miniAdmin.render(options);
 
         $('.login-out').on("click", function () {
-            sessionStorage.removeItem('id')
-            sessionStorage.removeItem('name')
-            sessionStorage.removeItem('role')
+            Cookies.remove('userId')
+            Cookies.remove('userName')
+            Cookies.remove('roleId')
             layer.msg('退出登录成功', function () {
                 window.location = 'page/login-2.html';
             });
