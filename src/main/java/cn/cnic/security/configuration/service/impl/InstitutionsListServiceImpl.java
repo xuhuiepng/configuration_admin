@@ -29,6 +29,8 @@ public class InstitutionsListServiceImpl extends ServiceImpl<InstitutionsListDao
         if(params.containsKey("ipScope"))
             queryWrapper.like("ip_scope",params.get("ipScope").toString());
 
+        queryWrapper.ne("id",13);
+
         IPage<InstitutionsListEntity> page = this.page(
                 new Query<InstitutionsListEntity>().getPage(params),
                 queryWrapper

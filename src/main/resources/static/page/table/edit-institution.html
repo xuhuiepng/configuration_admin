@@ -34,6 +34,7 @@
                 <option value="11">兰州分院</option>
                 <option value="12">新疆分院</option>
                 <option value="13">其他</option>
+                  <option value="-1">无上级机构或暂不确定</option>
               </select>
             </div>
         </div>
@@ -117,6 +118,11 @@
             var url = "/configuration/institutionslist/update";
 
             var newSecondCategory = [];
+
+            if(data.field.parentId==="-1")
+                delete data.field.parentId;
+
+
             $("input[name='newSecondCategory']").each(function () {
                 var item = {
                     suffix: $(this).val(),
