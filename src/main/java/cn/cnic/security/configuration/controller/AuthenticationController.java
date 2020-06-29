@@ -64,13 +64,13 @@ public class AuthenticationController {
         queryWrapper.eq("client_id", appKey);
         AppAuthenticationEntity entity = authenticationService.getOne(queryWrapper);
 //        log.info("AppAuthenticationEntity = {}",JacksonUtils.obj2String(entity));
-        R r = null;
+
         //发现appkey不存在
         if(entity == null ){
             log.warn("authentication appKey = {}",appKey);
             return R.error(1,"参数错误appkey");
         }
-
+        R r ;
         try {
             //科技云通行证认证
             AccessToken accessToken = authenticationAndAuthorizationServicel.authentication(request, entity);
