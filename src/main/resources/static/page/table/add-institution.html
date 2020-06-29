@@ -129,7 +129,7 @@
                     fullname: data.field.orgName,
                     latitude: data.field.latitude,
                     longitude: data.field.longitude,
-                    belongTo: $("option[value="+data.field.parentId+"]").text()
+                    belongTo: data.field.parentId ? $("option[value="+data.field.parentId+"]").text() : undefined
                 }
                 newSecondCategory.push(item);
             });
