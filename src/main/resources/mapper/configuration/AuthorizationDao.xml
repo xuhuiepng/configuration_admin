@@ -29,7 +29,17 @@
             <result property="userName" column="user_name"/>
             <result property="roleId" column="role_id"/>
             <result property="orgId" column="org_id"/>
+            <result property="orgParentId" column="org_parent_id"/>
             <result property="contacts" column="contacts"/>
+            <result property="phone" column="phone"/>
+            <result property="remark" column="remark"/>
+            <result property="updateUser" column="update_user"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="lastIp" column="last_ip"/>
+            <result property="lastTime" column="last_time"/>
+            <result property="loginNumber" column="login_number"/>
+            <result property="authenticationNumber" column="authentication_number"/>
+            <result property="localPassword" column="local_password"/>
         </association>
 
         <association property="sysmRole" javaType="cn.cnic.security.configuration.entity.SysmRole">
