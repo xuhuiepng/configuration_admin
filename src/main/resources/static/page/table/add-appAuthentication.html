@@ -101,7 +101,7 @@
                 var message = '';
                 $.ajax({
                     type:"POST",
-                    url:"/configuration/appauthentication/verify",
+                    url:"/configuration/appauthentications:verify",
                     async: false, //改为同步请求
                     contentType:'application/json;charset=UTF-8',
                     data:JSON.stringify(datas),
@@ -124,7 +124,7 @@
                 var message = '';
                 $.ajax({
                     type:"POST",
-                    url:"/configuration/appauthentication/verify",
+                    url:"/configuration/appauthentications:verify",
                     async: false, //改为同步请求
                     contentType:'application/json;charset=UTF-8',
                     data:JSON.stringify(datas),
@@ -146,7 +146,7 @@
                 var message = '';
                 $.ajax({
                     type:"POST",
-                    url:"/configuration/appauthentication/verify",
+                    url:"/configuration/appauthentications:verify",
                     async: false, //改为同步请求
                     contentType:'application/json;charset=UTF-8',
                     data:JSON.stringify(datas),
@@ -169,7 +169,7 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var url = "/configuration/appauthentication/save";
+            var url = "/configuration/appauthentications";
 
 
             var index =layer.confirm('是否添加项目', {icon: 3, title:'提示'}, function(index){

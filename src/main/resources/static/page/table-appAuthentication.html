@@ -83,7 +83,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '/configuration/appauthentication/list',
+            url: '/configuration/appauthentications',
             parseData: function(res){ //res 即为原始返回的数据
                 return {
                     "code": res.code, //解析接口状态
@@ -107,10 +107,10 @@
                 {field: 'projectName', width: 260, title: '项目名', align: "center"},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
-            initSort: {
-                field: 'clientId' //排序字段，对应 cols 设定的各字段名
-                ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
-            },
+            // initSort: {
+            //     field: 'clientId' //排序字段，对应 cols 设定的各字段名
+            //     ,type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+            // },
             limits: [10, 15, 20, 25, 50, 100],
             limit: 10,
             page: true,
@@ -224,7 +224,7 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                $.get("/configuration/appauthentication/info/"+data.appToken,function(res){
+                $.get("/configuration/appauthentications/"+data.appToken,function(res){
                     var content = miniPage.getHrefContent('page/table/edit-appAuthentication.html');
                     var openWH = miniPage.getOpenWidthHeight();
 
@@ -255,7 +255,7 @@
                 return false;
 
             } else if (obj.event === 'delete') {
-                var url = '/configuration/appauthentication/delete';
+                var url = '/configuration/appauthentications:delete';
 
                 layer.confirm('真的删除'+data.appName+'吗？', function (index) {
 
