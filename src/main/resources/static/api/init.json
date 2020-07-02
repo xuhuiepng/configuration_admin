@@ -23,9 +23,23 @@
         },
         {
           "title": "研究所管理",
-          "href": "page/table-institutions.html",
+          "href": "",
           "icon": "fa fa-bank",
-          "target": "_self"
+          "target": "_self",
+          "child": [
+            {
+              "title": "研究所基本信息",
+              "href": "page/table-institutions.html",
+              "icon": "fa fa-navicon",
+              "target": "_self"
+            },
+            {
+              "title": "研究所邮箱地址",
+              "href": "page/table-comparingChart.html",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            }
+          ]
         },
         {
           "title": "项目管理",

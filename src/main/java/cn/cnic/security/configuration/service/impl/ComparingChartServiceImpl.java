@@ -22,6 +22,12 @@ public class ComparingChartServiceImpl extends ServiceImpl<ComparingChartDao, Co
     	if(params.containsKey("fullname")) {
     		query.eq("fullname", params.get("fullname"));
     	}
+    	if(params.containsKey("orgname")) {
+    		query.like("fullname", params.get("orgname"));
+    	}
+    	if(params.containsKey("suffix")) {
+    		query.like("suffix", params.get("suffix"));
+    	}
         IPage<ComparingChartEntity> page = this.page(
                 new Query<ComparingChartEntity>().getPage(params),
                 query

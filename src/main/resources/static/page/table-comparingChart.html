@@ -1,0 +1,245 @@
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">机构名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="orgname" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">邮箱后缀</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="suffix" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                <!-- <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button> -->
+            </div>
+        </script>
+
+        <table class="layui-hide" id="suffixTableId" lay-filter="suffixTableFilter"></table>
+
+        <script type="text/html" id="suffixTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+    </div>
+</div>
+
+<script>
+    var prefix = "/"
+    layui.use(['form', 'table','miniPage','element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage;
+
+        function delSuffix(suffix) {
+            var success = false;
+            var ids = [];
+            if(Array.isArray(suffix)) {
+                suffix.forEach((item) => {
+                    ids.push(item.id);
+                });
+            } else {
+                ids.push(suffix.id)
+            }
+            $.ajax({
+                url: prefix + "configuration/comparingchart/delete",
+                async: false,
+                contentType:"application/json",
+                type: "POST",
+                data: JSON.stringify(ids),
+                success: function(res) {
+                    success = true;
+                }
+            });
+            return success;
+        }
+
+
+        table.render({
+            elem: '#suffixTableId',
+            url: prefix+'configuration/comparingchart/list',
+            parseData: function(res){ //res 即为原始返回的数据
+                return {
+                "code": res.code, //解析接口状态
+                "msg": res.msg, //解析提示文本
+                "count": res.page.totalCount, //解析数据长度
+                "data": res.page.list //解析数据列表
+                };},
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            cols: [[
+                {field: 'suffix', width: 200, title: '邮箱后缀'},
+                {field: 'abbreviation', width: 120, title: '研究所简称'},
+                {field: 'fullname', width: 300, title: '研究所名称'},
+                {field: 'latitude', width: 80, title: '纬度'},
+                {field: 'longitude', width: 80, title: '经度'},
+                {field: 'belongTo', width: 200, title: '上级机构'},
+                {title: '操作', minWidth: 150, toolbar: '#suffixTableBar', align: "center"}
+            ]],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+
+            //执行搜索重载
+            table.reload('suffixTableId', {
+                page: {
+                    curr: 1
+                }
+                , where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        /**
+         * toolbar事件监听
+         */
+        table.on('toolbar(suffixTableFilter)', function (obj) {
+            if (obj.event === 'add') {   // 监听添加操作
+                var content = miniPage.getHrefContent('/page/table/add-comparingChart.html');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '添加邮箱后缀',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('suffixTableId')
+                    , data = checkStatus.data;
+                layer.confirm('真的删除么?', function (index) {
+                    if(delSuffix(data)) {
+                        layer.msg("删除成功！");
+                    } else {
+                        layer.msg("删除失败！");
+                    }
+                    layer.close(index);
+                    table.reload('suffixTableId');
+                });
+            }
+        });
+
+        //监听表格复选框选择
+        table.on('checkbox(suffixTableFilter)', function (obj) {
+            console.log(obj)
+        });
+
+        table.on('tool(suffixTableFilter)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'edit') {
+
+                var content = miniPage.getHrefContent('/page/table/edit-comparingChart.html');
+                var openWH = miniPage.getOpenWidthHeight();
+
+                var index = layer.open({
+                    title: '编辑邮箱后缀',
+                    type: 1,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: [openWH[0] + 'px', openWH[1] + 'px'],
+                    offset: [openWH[2] + 'px', openWH[3] + 'px'],
+                    content: content,
+                    success: function(lay, index) {
+                        $("#orgSelect").html("")
+                        $.ajax({
+                            url:prefix + "configuration/institutions?limit=500",
+                            async:true,
+                            success:function(res){
+                                res = res.page.list;
+                                $("#orgSelect").append("<option value=''>请搜索选择</option>")
+                                for(var i=0;i<res.length;i++){
+                                    if(i < 13)
+                                        continue
+                                    $("#orgSelect").append("<option value='"+res[i].orgName+"'>"+res[i].orgName+"</option>")
+                                }
+                                $('#suffixInput').val(data.suffix);
+                                $('#belongToSelect').val(data.belongTo);
+                                $('#orgSelect').val(data.fullname);
+                                $('#abbInput').val(data.abbreviation);
+                                $('#longitudeInput').val(data.longitude);
+                                $('#latitudeInput').val(data.latitude);
+                                
+                                form.render();
+                            },
+                            error:function(){
+                                console.log("出错！");
+                            }
+                        });
+                        form.on('submit(updateBtn)', function (data) {
+                            var api = prefix + "configuration/comparingchart/update"
+                            
+                            // console.log(data.field)
+                            $.ajax({
+                                url: api,
+                                async: true,
+                                contentType:"application/json",
+                                type: "POST",
+                                data: JSON.stringify({id: obj.data.id, ...data.field}),
+                                success: function(res) {
+                                    layer.msg("修改成功");
+                                    parent.layui.table.reload('suffixTableId')
+                                    layer.close(index);
+                                }
+                            })
+                            return true;
+                        });
+                    }
+                });
+                $(window).on("resize", function () {
+                    layer.full(index);
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function (index) {
+                    if(delSuffix(obj.data)) {
+                        layer.msg("删除成功！");
+                    } else {
+                        layer.msg("删除失败！");
+                    }
+                    obj.del();
+                    layer.close(index);
+                    table.reload('suffixTableId');
+                });
+            }
+        });
+
+    });
+</script>

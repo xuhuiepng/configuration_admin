@@ -1,0 +1,74 @@
+
+<div class="layuimini-main">
+
+    <div class="layui-form layuimini-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">邮箱后缀</label>
+            <div class="layui-input-block">
+                <input id="suffixInput" type="text" name="suffix" lay-verify="required" laceholder="请输入邮箱后缀" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">上级机构</label>
+            <div class="layui-input-inline">
+              <select id="belongToSelect"name="belongTo" lay-verify="required" lay-search="" lay-reqtext="上级机构不能为空">
+                <option value="">请选择</option>
+                <option value="北京分院">北京分院</option>
+                <option value="沈阳分院">沈阳分院</option>
+                <option value="长春分院">长春分院</option>
+                <option value="上海分院">上海分院</option>
+                <option value="南京分院">南京分院</option>
+                <option value="武汉分院">武汉分院</option>
+                <option value="广州分院">广州分院</option>
+                <option value="成都分院">成都分院</option>
+                <option value="昆明分院">昆明分院</option>
+                <option value="西安分院">西安分院</option>
+                <option value="兰州分院">兰州分院</option>
+                <option value="新疆分院">新疆分院</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">机构</label>
+            <div class="layui-input-inline">
+              <select id="orgSelect" name="fullname" lay-filter="orgSelect" lay-verify="required" lay-search="" lay-reqtext="机构不能为空">
+                
+              </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">机构简称</label>
+            <div class="layui-input-block">
+                <input id="abbInput" type="text" name="abbreviation" lay-verify="required" lay-reqtext="机构简称不能为空" placeholder="请输入机构简称" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">经度</label>
+            <div class="layui-input-block">
+                <input id="longitudeInput" type="text" name="longitude" lay-verify="required" lay-reqtext="经度不能为空" placeholder="请输入经度" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">纬度</label>
+            <div class="layui-input-block">
+                <input id="latitudeInput" type="text" name="latitude" lay-verify="required" lay-reqtext="纬度不能为空" placeholder="请输入纬度" value="" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="updateBtn">确认保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'table'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$;
+
+    });
+</script>
