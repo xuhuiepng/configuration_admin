@@ -8,7 +8,11 @@ import java.util.Map;
 import cn.cnic.security.common.utils.PageUtils;
 import cn.cnic.security.common.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +32,7 @@ import cn.cnic.security.configuration.service.ComparingChartService;
  * @date 2020-06-04 14:41:02
  */
 @RestController
-@RequestMapping("configuration/comparingchart")
+@RequestMapping("configuration")
 public class ComparingChartController {
     @Autowired
     private ComparingChartService comparingChartService;
@@ -36,7 +40,7 @@ public class ComparingChartController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/comparingcharts")
 //    @RequiresPermissions("configuration:comparingchart:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = comparingChartService.queryPage(params);
@@ -48,7 +52,7 @@ public class ComparingChartController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @GetMapping("/comparingcharts/{id}")
 //    @RequiresPermissions("configuration:comparingchart:info")
     public R info(@PathVariable("id") int id){
 		ComparingChartEntity comparingChart = comparingChartService.getById(id);
@@ -59,7 +63,7 @@ public class ComparingChartController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/comparingcharts")
 //    @RequiresPermissions("configuration:comparingchart:save")
     public R save(@RequestBody ComparingChartEntity comparingChart){
     	comparingChart.setId(comparingChartService.getMaxId() + 1);
@@ -71,7 +75,7 @@ public class ComparingChartController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PutMapping("/comparingcharts")
 //    @RequiresPermissions("configuration:comparingchart:update")
     public R update(@RequestBody ComparingChartEntity comparingChart){
 		comparingChartService.updateById(comparingChart);
@@ -82,7 +86,7 @@ public class ComparingChartController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping("/comparingcharts")
 //    @RequiresPermissions("configuration:comparingchart:delete")
     public R delete(@RequestBody String[] suffixs){
 		comparingChartService.removeByIds(Arrays.asList(suffixs));

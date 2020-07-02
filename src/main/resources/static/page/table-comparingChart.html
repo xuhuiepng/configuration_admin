@@ -62,10 +62,10 @@
                 ids.push(suffix.id)
             }
             $.ajax({
-                url: prefix + "configuration/comparingchart/delete",
+                url: prefix + "configuration/comparingcharts",
                 async: false,
                 contentType:"application/json",
-                type: "POST",
+                type: "DELETE",
                 data: JSON.stringify(ids),
                 success: function(res) {
                     success = true;
@@ -77,7 +77,7 @@
 
         table.render({
             elem: '#suffixTableId',
-            url: prefix+'configuration/comparingchart/list',
+            url: prefix+'configuration/comparingcharts',
             parseData: function(res){ //res 即为原始返回的数据
                 return {
                 "code": res.code, //解析接口状态
@@ -204,14 +204,14 @@
                             }
                         });
                         form.on('submit(updateBtn)', function (data) {
-                            var api = prefix + "configuration/comparingchart/update"
+                            var api = prefix + "configuration/comparingcharts"
                             
                             // console.log(data.field)
                             $.ajax({
                                 url: api,
                                 async: true,
                                 contentType:"application/json",
-                                type: "POST",
+                                type: "PUT",
                                 data: JSON.stringify({id: obj.data.id, ...data.field}),
                                 success: function(res) {
                                     layer.msg("修改成功");
