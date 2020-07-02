@@ -39,6 +39,8 @@ public class AppAuthenticationServiceImpl extends ServiceImpl<AppAuthenticationD
         if(params.containsKey("projectName"))
             queryWrapper.like("project_name",params.get("projectName"));
 
+        queryWrapper.orderBy(true,true,"is_del");
+
         IPage<AppAuthenticationEntity> page = this.page(
                 new Query<AppAuthenticationEntity>().getPage(params),
                 queryWrapper

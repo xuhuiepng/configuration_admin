@@ -13,11 +13,7 @@ import cn.cnic.security.configuration.entity.AppAuthenticationEntity;
 import cn.cnic.security.configuration.service.AppAuthenticationService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -28,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020-06-09 09:59:33
  */
 @RestController
-@RequestMapping("configuration/appauthentication")
+@RequestMapping("configuration")
 public class AppAuthenticationController {
     @Autowired
     private AppAuthenticationService appAuthenticationService;
@@ -36,7 +32,7 @@ public class AppAuthenticationController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/appauthentications")
 //    @RequiresPermissions("configuration:appauthentication:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = appAuthenticationService.queryPage(params);
@@ -48,7 +44,7 @@ public class AppAuthenticationController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{appToken}")
+    @GetMapping("/appauthentications/{appToken}")
 //    @RequiresPermissions("configuration:appauthentication:info")
     public R info(@PathVariable("appToken") String appToken){
         AppAuthenticationEntity appAuthentication = appAuthenticationService.getById(appToken);
@@ -59,7 +55,7 @@ public class AppAuthenticationController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/appauthentications")
 //    @RequiresPermissions("configuration:appauthentication:save")
     public R save(@RequestBody AppAuthenticationEntity appAuthentication){
 
@@ -75,7 +71,7 @@ public class AppAuthenticationController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PutMapping("/appauthentications/{appToken}")
 //    @RequiresPermissions("configuration:appauthentication:update")
     public R update(@RequestBody AppAuthenticationEntity appAuthentication){
         //appAuthentication.setAppToken(MD5.MD5Encode(appAuthentication.getAppName(),"utf8"));
@@ -92,7 +88,7 @@ public class AppAuthenticationController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @PostMapping("/appauthentications:delete")
 //    @RequiresPermissions("configuration:appauthentication:delete")
     public R delete(@RequestBody String[] appTokens){
         //appAuthenticationService.removeByIds(Arrays.asList(appTokens));
@@ -106,7 +102,7 @@ public class AppAuthenticationController {
         return R.ok();
     }
 
-    @RequestMapping("/verify")
+    @RequestMapping("/appauthentications:verify")
     public R verify(@RequestBody AppAuthenticationEntity appAuthentication){
 
         QueryWrapper<AppAuthenticationEntity> queryWrapper = new QueryWrapper<>();

@@ -12,15 +12,12 @@ import cn.cnic.security.configuration.service.UserAppExplainService;
 import cn.cnic.security.configuration.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @RestController
-@RequestMapping("configuration/userapplist")
+@RequestMapping("configuration")
 public class UserAppListController {
     @Autowired
     private UserAppListService userAppListService;
@@ -35,7 +32,7 @@ public class UserAppListController {
     private UserAppExplainService userAppExplainService;
 
 
-    @RequestMapping("/list")
+    @GetMapping("/userapps")
     public R list(@RequestParam Map<String, Object> params){
 
 
@@ -69,7 +66,7 @@ public class UserAppListController {
         return R.ok().put("page",page);
     }
 
-    @RequestMapping("/users")
+    @GetMapping("/userapps/users")
     public R getUsers(){
 
         List<UserEntity> users = userService.list();
@@ -77,7 +74,7 @@ public class UserAppListController {
         return R.ok().put("users",users);
     }
 
-    @RequestMapping("/apps")
+    @GetMapping("/userapps/apps")
     public R getApps(){
         QueryWrapper<AppAuthenticationEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("is_del","0");
@@ -87,7 +84,7 @@ public class UserAppListController {
         return R.ok().put("apps",apps);
     }
 
-    @RequestMapping("/save")
+    @PostMapping("/userapps")
     public R save(@RequestBody UserAppExplainEntity userAppExplainEntity){
         QueryWrapper<UserAppExplainEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",userAppExplainEntity.getUserId());
@@ -110,7 +107,7 @@ public class UserAppListController {
         return R.ok();
     }
 
-    @RequestMapping("delete")
+    @PostMapping("/userapps:delete")
     public R delete(@RequestBody UserAppListEntity userAppListEntity){
         QueryWrapper<AppAuthenticationEntity> appQuery = new QueryWrapper<>();
         QueryWrapper<UserEntity> userQuery = new QueryWrapper<>();

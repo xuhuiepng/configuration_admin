@@ -115,7 +115,7 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var url = "/configuration/institutionslist/update";
+            var url = "/configuration/institutions/"+data.field.id;
 
             var newSecondCategory = [];
 
@@ -151,7 +151,7 @@
             var index =layer.confirm('是否修改机构', {icon: 3, title:'提示'}, function(index){
                 //do something
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     url: url,
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(data.field),
