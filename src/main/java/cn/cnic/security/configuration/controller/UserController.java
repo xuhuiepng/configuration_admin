@@ -6,7 +6,11 @@ import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +31,7 @@ import cn.cnic.security.common.utils.R;
  * @date 2020-06-04 14:41:02
  */
 @RestController
-@RequestMapping("configuration/user")
+@RequestMapping("configuration")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -35,7 +39,7 @@ public class UserController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/users")
 //    @RequiresPermissions("configuration:user:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = userService.queryPage(params);
@@ -47,7 +51,7 @@ public class UserController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{userId}")
+    @GetMapping("/users/{userId}")
 //    @RequiresPermissions("configuration:user:info")
     public R info(@PathVariable("userId") Integer userId){
 		UserEntity user = userService.getById(userId);
@@ -58,7 +62,7 @@ public class UserController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/users")
 //    @RequiresPermissions("configuration:user:save")
     public R save(@RequestBody UserEntity user){
 		userService.save(user);
@@ -69,7 +73,7 @@ public class UserController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PutMapping("/users")
 //    @RequiresPermissions("configuration:user:update")
     public R update(@RequestBody UserEntity user){
     	user.setUpdateTime(new Date());
@@ -81,7 +85,7 @@ public class UserController {
     /**
      * 删除
      */
-    @RequestMapping("/delete")
+    @DeleteMapping("/users")
 //    @RequiresPermissions("configuration:user:delete")
     public R delete(@RequestBody Integer[] userIds){
 		userService.removeByIds(Arrays.asList(userIds));

@@ -74,10 +74,10 @@
                 ids.push(users.userId)
             }
             $.ajax({
-                url: prefix + "configuration/user/delete",
+                url: prefix + "configuration/users",
                 async: false,
                 contentType:"application/json",
-                type: "POST",
+                type: "DELETE",
                 data: JSON.stringify(ids),
                 success: function(res) {
                     success = true;
@@ -98,7 +98,7 @@
                         user.role = "分院网管"
                     }
                     $.ajax({
-                        url: prefix + "configuration/institutionslist/info/" + user.orgId,
+                        url: prefix + "configuration/institutions/" + user.orgId,
                         async: false,
                         success: function(resp) {
                             user.org = resp.institutionsList.orgName;
@@ -112,7 +112,7 @@
 
         table.render({
             elem: '#userTableId',
-            url: prefix+'configuration/user/list',
+            url: prefix+'configuration/users',
             parseData: function(res){ //res 即为原始返回的数据
                 return {
                 "code": res.code, //解析接口状态
@@ -224,9 +224,8 @@
                     success: function(lay, index) {
                         $("#orgSelect").html("")
                         $.ajax({
-                            url:prefix + "configuration/institutionslist/list?limit=500",
+                            url:prefix + "configuration/institutions?limit=500",
                             async:true,
-                            type:"POST",
                             success:function(res){
                                 res = res.page.list;
                                 $("#orgSelect").append("<option value=''>请搜索选择</option>")
@@ -260,7 +259,7 @@
                             
                         }); 
                         form.on('submit(updateBtn)', function (data) {
-                            var api = prefix + "configuration/user/update"
+                            var api = prefix + "configuration/users"
                             var pw = undefined
                             if(data.field.localPassword) {
                                 pw = md5(data.field.localPassword)
@@ -270,7 +269,7 @@
                                 url: api,
                                 async: true,
                                 contentType:"application/json",
-                                type: "POST",
+                                type: "PUT",
                                 data: JSON.stringify({userId: obj.data.userId, ...data.field,  localPassword: pw, localPasswordc:undefined}),
                                 success: function(res) {
                                     layer.msg("修改成功");
