@@ -87,6 +87,7 @@ public class AppAuthenticationController {
 
     /**
      * 删除
+     * 这里涉及到批量删除，delete请求会出现url过长的问题，此处采用post请求
      */
     @PostMapping("/appauthentications:delete")
 //    @RequiresPermissions("configuration:appauthentication:delete")
