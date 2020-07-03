@@ -170,8 +170,8 @@
                 if(oldSecondCategory.length > 0) {
                     oldSecondCategory.forEach((item) => {
                         $.ajax({
-                            type: "POST",
-                            url: "/configuration/comparingchart/update",
+                            type: "PUT",
+                            url: "/configuration/comparingcharts",
                             contentType: "application/json; charset=utf-8",
                             data: JSON.stringify(item),
                             dataType: "json",
@@ -187,7 +187,7 @@
                 if(newSecondCategory.length > 0) {
                     newSecondCategory.forEach((item) => {
                         $.ajax({
-                            url: "/configuration/comparingchart/save",
+                            url: "/configuration/comparingcharts",
                             async: true,
                             contentType:"application/json",
                             type: "POST",
