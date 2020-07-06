@@ -146,7 +146,7 @@
         $(function () {
             $.ajax({
                 type:"GET",
-                url:"/configuration/userapplist/list",
+                url:"/configuration/userapps",
                 data:{ page: 1, limit: 10 },
                 dataType:"json",
                 success:function (res) {
@@ -161,7 +161,7 @@
                             if (!first) {
                                 $.ajax({
                                     type:"GET",
-                                    url:"/configuration/userapplist/list",
+                                    url:"/configuration/userapps",
                                     data:{ page: obj.curr, limit: obj.limit},
                                     dataType:"json",
                                     success:function (res) {
@@ -188,7 +188,7 @@
 
             $.ajax({
                 type:"GET",
-                url:"/configuration/userapplist/list",
+                url:"/configuration/userapps",
                 data:{ page: 1, limit: 10 ,userName:data.field.userName},
                 dataType:"json",
                 success:function (res) {
@@ -204,7 +204,7 @@
                             if (!first) {
                                 $.ajax({
                                     type:"GET",
-                                    url:"/configuration/userapplist/list",
+                                    url:"/configuration/userapps",
                                     data:{ page: obj.curr, limit: obj.limit,userName:data.field.userName},
                                     dataType:"json",
                                     success:function (res) {
@@ -257,7 +257,7 @@
             layer.confirm('真的删除'+userName+'的'+appName+'的权限吗？',function() {
                 $.ajax({
                     type:"POST",
-                    url:"/configuration/userapplist/delete",
+                    url:"/configuration/userapps:delete",
                     contentType: "application/json; charset=utf-8",
                     data:JSON.stringify(data),
                     dataType:"json",

@@ -75,7 +75,7 @@
             if(list.length > 0) {
                 list.forEach((inst) => {
                     $.ajax({
-                        url: "/configuration/comparingchart/list",
+                        url: "/configuration/comparingcharts",
                         data: {fullname:inst.orgName},
                         async: false,
                         success: function(resp) {
@@ -95,7 +95,7 @@
 
         table.render({
             elem: '#currentTableId',
-            url: '/configuration/institutionslist/list',
+            url: '/configuration/institutions',
             parseData: function(res){ //res 即为原始返回的数据
                 return {
                 "code": res.code, //解析接口状态
@@ -175,7 +175,7 @@
                     , data = checkStatus.data
                     ,len = data.length
                     ,id = []
-                    ,url = '/configuration/institutionslist/delete';
+                    ,url = '/configuration/institutions:delete';
 
                     
                 for (var i = 0; i < len; i++) {
@@ -213,7 +213,7 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                $.get("/configuration/institutionslist/info/"+data.id,function(res){
+                $.get("/configuration/institutions/"+data.id,function(res){
                     var content = miniPage.getHrefContent('page/table/edit-institution.html');
                     var openWH = miniPage.getOpenWidthHeight();
 
@@ -243,7 +243,7 @@
                         content: content,
                         success: function(layero,index){
                             $.ajax({
-                                url: "/configuration/comparingchart/list",
+                                url: "/configuration/comparingcharts",
                                 data: {fullname:res.institutionsList.orgName},
                                 async: false,
                                 success: function(resp) {
@@ -268,7 +268,7 @@
                 return false;
 
             } else if (obj.event === 'delete') {
-                var url = '/configuration/institutionslist/delete';
+                var url = '/configuration/institutions:delete';
 
                 layer.confirm('真的删除 '+data.orgName+' 吗？', function (index) {
 

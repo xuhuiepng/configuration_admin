@@ -114,7 +114,7 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var url = "/configuration/institutionslist/save";
+            var url = "/configuration/institutions";
 
             var newSecondCategory = [];
 
@@ -158,7 +158,7 @@
                 if(newSecondCategory.length > 0) {
                     newSecondCategory.forEach((item) => {
                         $.ajax({
-                            url: "/configuration/comparingchart/save",
+                            url: "/configuration/comparingcharts",
                             async: true,
                             contentType:"application/json",
                             type: "POST",

@@ -97,9 +97,8 @@
         form.render();
         $("#orgSelect").html("")
         $.ajax({
-            url:prefix + "configuration/institutionslist/list?limit=500",
+            url:prefix + "configuration/institutions?limit=500",
             async:true,
-            type:"POST",
             success:function(data){
                 data = data.page.list;
                 $("#orgSelect").append("<option value=''>请搜索选择</option>")
@@ -127,7 +126,7 @@
 
         // 当前弹出层，防止ID被覆盖
         var parentIndex = layer.index;
-        var api = prefix + "configuration/user/save"
+        var api = prefix + "configuration/users"
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {

@@ -21,7 +21,7 @@ import cn.cnic.security.common.utils.R;
  * @date 2020-06-04 14:41:02
  */
 @RestController
-@RequestMapping("configuration/institutionslist")
+@RequestMapping("configuration")
 public class InstitutionsListController {
     @Autowired
     private InstitutionsListService institutionsListService;
@@ -29,7 +29,7 @@ public class InstitutionsListController {
     /**
      * 列表
      */
-    @RequestMapping("/list")
+    @GetMapping("/institutions")
 //    @RequiresPermissions("configuration:institutionslist:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = institutionsListService.queryPage(params);
@@ -40,7 +40,7 @@ public class InstitutionsListController {
     /**
      * 信息
      */
-    @RequestMapping("/info/{id}")
+    @GetMapping("/institutions/{id}")
 //    @RequiresPermissions("configuration:institutionslist:info")
     public R info(@PathVariable("id") Integer id){
 		InstitutionsListEntity institutionsList = institutionsListService.getById(id);
@@ -51,7 +51,7 @@ public class InstitutionsListController {
     /**
      * 保存
      */
-    @RequestMapping(value = "/save")
+    @PostMapping("/institutions")
 //    @RequiresPermissions("configuration:institutionslist:save")
     public R save(@RequestBody InstitutionsListEntity institutionsList){
         institutionsList.setCreateTime(new Date());
@@ -63,7 +63,7 @@ public class InstitutionsListController {
     /**
      * 修改
      */
-    @RequestMapping("/update")
+    @PutMapping("/institutions/{id}")
 //    @RequiresPermissions("configuration:institutionslist:update")
     public R update(@RequestBody InstitutionsListEntity institutionsList){
         institutionsList.setUpdated(new Date());
@@ -74,8 +74,9 @@ public class InstitutionsListController {
 
     /**
      * 删除
+     * 这里涉及到批量删除，delete请求会出现url过长的问题，此处采用post请求
      */
-    @RequestMapping("/delete")
+    @PostMapping("/institutions:delete")
 //    @RequiresPermissions("configuration:institutionslist:delete")
     public R delete(@RequestBody Integer[] ids){
 		institutionsListService.removeByIds(Arrays.asList(ids));

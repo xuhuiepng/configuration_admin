@@ -106,13 +106,13 @@
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var url = "/configuration/appauthentication/update";
+            var url = "/configuration/appauthentications/"+data.field.appToken;
 
 
             var index =layer.confirm('是否修改权限', {icon: 3, title:'提示'}, function(index){
                 //do something
                 $.ajax({
-                    type: "POST",
+                    type: "PUT",
                     url: url,
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(data.field),
