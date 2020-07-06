@@ -104,18 +104,17 @@
                         Cookies.set("userName", res.user.userName, { secure: true, expires: 1 })
                         Cookies.set("roleId", res.user.roleId, { secure: true, expires: 1 })
                         top.layer.close(loading);
-                        layer.msg('登录成功', function () {
-                            window.location = '../';
-                        });
+                        layer.msg('登录成功');
+                        window.location = '../';
                     }
                     else {
                         top.layer.close(loading);
-                        layer.msg(res.msg);
+                        layer.msg("登录失败" + res.msg);
                     }
                 },
                 error: function(res) {
                     top.layer.close(loading);
-                    layer.msg("登录错误");
+                    layer.msg("登录失败");
                 }
             });
             
