@@ -94,15 +94,14 @@
 
             $.ajax({
                 url: "/"+"configuration/index/login",
-                async: false,
                 contentType:"application/json",
                 type: "POST",
                 data: JSON.stringify(data.field),
                 success: function(res) {
                     if(res.code == 0) {
-                        Cookies.set('userId', res.user.userId, { secure: true, expires: 1 })
-                        Cookies.set("userName", res.user.userName, { secure: true, expires: 1 })
-                        Cookies.set("roleId", res.user.roleId, { secure: true, expires: 1 })
+                        // Cookies.set('userId', res.user.userId, { secure: true, expires: 1 })
+                        // Cookies.set("userName", res.user.userName, { secure: true, expires: 1 })
+                        // Cookies.set("roleId", res.user.roleId, { secure: true, expires: 1 })
                         top.layer.close(loading);
                         layer.msg('登录成功');
                         window.location = '../';
