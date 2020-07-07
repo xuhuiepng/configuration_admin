@@ -33,7 +33,8 @@
         </association>
 
         <association property="sysmRole" javaType="cn.cnic.security.configuration.entity.SysmRole">
-            <result column="roleName" property="roleName" />
+            <result column="role_nane" property="roleName" />
+            <result column="roleid" property="roleId" />
         </association>
 
         <association property="sysmListOrg" javaType="cn.cnic.security.configuration.entity.SysmListOrg">
@@ -49,6 +50,7 @@
             t1.role_id,
             t1.org_id,
             t1.contacts,
+            t2.role_id roleid,
             t2.role_nane,
             t3.org_name,
             t3.longitude,
