@@ -75,15 +75,19 @@ public class AuthenticationController {
             if(StringUtils.equals("active",accessToken.getUserInfo().getCstnetIdStatus())){
                 //通行证账号也就是邮箱
                 String cstnetId = accessToken.getUserInfo().getCstnetId();
-                //后台认证+授权
-                SysmUserInfo findDeactivation = authenticationAndAuthorizationServicel.findDeactivation(appKey, cstnetId);
-                if(findDeactivation==null){
-                    return R.error(6, "帐户未获得权限");
-                }
+                //根据邮箱返回用户信息
                 SysmUserInfo sysmUserInfo = authenticationAndAuthorizationServicel.authorization(appKey,cstnetId);
-                String userJson = JacksonUtils.obj2String(sysmUserInfo);
-                String token = jwtUtils.generateToken(userJson);
-                r = R.ok().put("token",token);
+                //认证
+                SysmUserInfo findDeactivation = authenticationAndAuthorizationServicel.findDeactivation(appKey, cstnetId);
+                //为空则未授权返回token，不为空则用户已授权
+                if(findDeactivation==null){
+                    r = R.error(6, "帐户未获得权限");
+                    String userJson = JacksonUtils.obj2String(sysmUserInfo);
+                    String token = jwtUtils.generateToken(userJson);
+                    r = R.ok().put("token",token);
+                }else{
+                    return R.ok();
+                }
             }else {
                 r = R.error(5,"帐户未激活");
             }
