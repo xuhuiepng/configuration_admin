@@ -1,5 +1,5 @@
 server:
-  port: 12950
+  port: 12990
 
 # mysql
 spring:
