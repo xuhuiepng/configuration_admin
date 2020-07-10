@@ -85,11 +85,10 @@ public class AuthenticationController {
                 //为空则未授权返回token，不为空则用户已授权
                 if(findDeactivation==null){
                     r = R.error(6, "帐户未获得权限");
+                }else{
                     String userJson = JacksonUtils.obj2String(sysmUserInfo);
                     String token = jwtUtils.generateToken(userJson);
                     r = R.ok().put("token",token);
-                }else{
-                    return R.ok();
                 }
             }else {
                 r = R.error(5,"帐户未激活");
