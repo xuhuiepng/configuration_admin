@@ -46,7 +46,7 @@ public class AuthenticationController {
      *
      * @return
      */
-    @GetMapping(value = {"sso/authentication"})
+    @PostMapping(value = {"sso/authentication"})
     public R authentication(HttpServletRequest request, String code , Integer appKey){
         if(StringUtils.isEmpty(code) && appKey != null){
             return R.error(1,"参数为空");
