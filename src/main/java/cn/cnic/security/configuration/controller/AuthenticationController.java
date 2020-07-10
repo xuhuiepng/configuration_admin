@@ -19,10 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,7 +44,8 @@ public class AuthenticationController {
      * @return
      */
     @PostMapping(value = {"sso/authentication"})
-    public R authentication(HttpServletRequest request, String code , Integer appKey){
+    public R authentication(HttpServletRequest request, @RequestParam("code") String code ,@RequestParam("appKey")  Integer appKey){
+
         if(StringUtils.isEmpty(code) && appKey != null){
             return R.error(1,"参数为空");
         }
@@ -78,15 +76,18 @@ public class AuthenticationController {
             if(StringUtils.equals("active",accessToken.getUserInfo().getCstnetIdStatus())){
                 //通行证账号也就是邮箱
                 String cstnetId = accessToken.getUserInfo().getCstnetId();
-                //后台认证+授权
-                SysmUserInfo findDeactivation = authenticationAndAuthorizationServicel.findDeactivation(appKey, cstnetId);
-                if(findDeactivation==null){
-                    return R.error(6, "帐户未获得权限");
-                }
+                //根据邮箱返回用户信息
                 SysmUserInfo sysmUserInfo = authenticationAndAuthorizationServicel.authorization(appKey,cstnetId);
-                String userJson = JacksonUtils.obj2String(sysmUserInfo);
-                String token = jwtUtils.generateToken(userJson);
-                r = R.ok().put("token",token);
+                //认证
+                SysmUserInfo findDeactivation = authenticationAndAuthorizationServicel.findDeactivation(appKey, cstnetId);
+                //为空则未授权返回token，不为空则用户已授权
+                if(findDeactivation==null){
+                    r = R.error(6, "帐户未获得权限");
+                }else{
+                    String userJson = JacksonUtils.obj2String(sysmUserInfo);
+                    String token = jwtUtils.generateToken(userJson);
+                    r = R.ok().put("token",token);
+                }
             }else {
                 r = R.error(5,"帐户未激活");
             }

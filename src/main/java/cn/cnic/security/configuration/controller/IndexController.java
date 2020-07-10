@@ -7,9 +7,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,12 +32,9 @@ public class IndexController {
 	@Autowired
     private UserService userService;
 	
-	@Autowired
-	private HttpServletRequest request;
-	
-	@RequestMapping("/login")
+	@PostMapping("/login")
 //  @RequiresPermissions("configuration:index:login")
-	public R login(@RequestBody Map<String, Object> params){
+	public R login(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> params){
 		
 		List<UserEntity> users = userService.login(params);
 		
@@ -50,11 +50,26 @@ public class IndexController {
 			user.setLoginNumber(user.getLoginNumber() == null ? 1 : user.getLoginNumber() + 1);
 			user.setAuthenticationNumber(user.getAuthenticationNumber() == null ? 1 : user.getAuthenticationNumber() + 1);
 			userService.updateById(user);
-			return R.ok().put("user", user);
+			
+			Cookie cookie = new Cookie("userName", user.getUserName());
+			cookie.setMaxAge(259200);
+			cookie.setPath("/");
+		    response.addCookie(cookie);
+		    
+			return R.ok();
 		}
 		user.setAuthenticationNumber(user.getAuthenticationNumber() == null ? 1 : user.getAuthenticationNumber() + 1);
 		userService.updateById(user);
 		return R.error("密码错误");	    
+	}
+	
+	@PostMapping("/logout")
+	public R logout(HttpServletResponse response) {
+		Cookie cookie = new Cookie("userName", null);
+		cookie.setMaxAge(0);
+		cookie.setPath("/");
+	    response.addCookie(cookie);
+		return R.ok();
 	}
 	
 }

@@ -136,24 +136,39 @@
             loadingTime: 0,             // 初始化加载时间
             pageAnim: true             // 切换菜单动画
         };
-        /*
-        if(Cookies.get('userId') == null) {
+
+
+        if(Cookies.get('userName') == null) {
+
             window.location = 'page/login-2.html';
         }
         else {
             $('#usernameHref').text(Cookies.get('userName'))
         }
-        */
+
         miniAdmin.render(options);
 
         $('.login-out').on("click", function () {
-            Cookies.remove('userId')
-            Cookies.remove('userName')
-            Cookies.remove('roleId')
-            layer.msg('退出登录成功', function () {
-                window.location = 'page/login-2.html';
+            $.ajax({
+                url: "/"+"configuration/index/logout",
+                contentType:"application/json",
+                type: "POST",
+                success: function(res) {
+                    if(res.code == 0) {
+                        layer.msg('退出登录成功');
+                        window.location = 'page/login-2.html';
+                    }
+                    else {
+                        layer.msg("退出登录失败" + res.msg);
+                    }
+                },
+                error: function(res) {
+                    layer.msg("退出登录失败");
+                }
             });
         });
+
+        
 
         
     });
