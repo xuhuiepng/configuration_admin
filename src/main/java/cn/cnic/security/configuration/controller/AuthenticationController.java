@@ -45,6 +45,7 @@ public class AuthenticationController {
      */
     @PostMapping(value = {"sso/authentication"})
     public R authentication(HttpServletRequest request, @RequestParam("code") String code ,@RequestParam("appKey")  Integer appKey){
+
         if(StringUtils.isEmpty(code) && appKey != null){
             return R.error(1,"参数为空");
         }
@@ -61,13 +62,13 @@ public class AuthenticationController {
         queryWrapper.eq("client_id", appKey);
         AppAuthenticationEntity entity = authenticationService.getOne(queryWrapper);
 //        log.info("AppAuthenticationEntity = {}",JacksonUtils.obj2String(entity));
-        R r = null;
+
         //发现appkey不存在
         if(entity == null ){
             log.warn("authentication appKey = {}",appKey);
             return R.error(1,"参数错误appkey");
         }
-
+        R r ;
         try {
             //科技云通行证认证
             AccessToken accessToken = authenticationAndAuthorizationServicel.authentication(request, entity);
