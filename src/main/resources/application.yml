@@ -1,5 +1,5 @@
 server:
-  port: 12952
+  port: 12990
 
 # mysql
 spring:
@@ -10,10 +10,10 @@ spring:
     #url: jdbc:mysql://127.0.0.1:3306/configuration_admin?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     #username: configurationAdmin
     #password: ySZCSsQT!TX4
-    url: jdbc:mysql://127.0.0.1:3307/configuration_admin?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://127.0.0.1:3306/configuration_admin?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
-    password: 123456
-    
+    password: 123
+
     hikari:
       auto-commit: false
       connection-timeout: 30000
