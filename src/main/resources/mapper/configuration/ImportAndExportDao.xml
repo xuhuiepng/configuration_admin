@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.cnic.security.configuration.dao.ImportAndExportDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="cn.cnic.security.configuration.entity.InstitutionsListEntity" id="importAndExportListMap">
+        <result property="id" column="id"/>
+        <result property="orgName" column="org_name"/>
+        <result property="abbreviation" column="abbreviation"/>
+        <result property="longitude" column="longitude"/>
+        <result property="latitude" column="latitude"/>
+        <result property="ipScope" column="ip_scope"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="addInstitution" parameterType="cn.cnic.security.configuration.entity.ImportAndExportEntity">
+        INSERT INTO ca_institutions_list(id,org_name,abbreviation,longitude,latitude,ip_scope,create_time)
+        VALUES(#{id},#{orgName},#{abbreviation},#{longitude},#{latitude},#{ipScope},#{createTime})
+    </insert>
+
+    <select id="queryInstitutionsList3" resultMap="importAndExportListMap">
+        SELECT * FROM ca_institutions_list WHERE id &lt;= 3
+    </select>
+
+    <select id="queryInstitutionsList" resultMap="importAndExportListMap">
+        SELECT * FROM ca_institutions_list
+    </select>
+</mapper>

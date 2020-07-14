@@ -50,8 +50,20 @@
             <div class="layui-btn-container">
                 <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
                 <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+
+                <!--<input type="file" id="file" name="file">
+                <button type="button" class="layui-btn" id="test1" lay-event="test1" >
+                    <i class="layui-icon">&#xe67c;</i>上传1
+                </button>-->
+
+                <button type="button" class="layui-btn layui-btn-sm" lay-event="uploadXlsx" id="uploadXlsxAAA"><i class="layui-icon">&#xe681;</i></button>
+                <button type="button" class="layui-btn layui-btn-sm" lay-event="downXlsx" id="downXlsxAAA"><i class="layui-icon" >&#xe601;</i></button>
             </div>
+
         </script>
+
+        <button type="button" class="layui-btn layui-btn-sm" id="uploadXlsx"><i class="layui-icon">&#xe681;</i></button>
+        <button type="button" class="layui-btn layui-btn-sm" id="downXlsx"><i class="layui-icon" >&#xe601;</i></button>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
@@ -64,11 +76,12 @@
 </div>
 
 <script>
-    layui.use(['form', 'table','miniPage','element'], function () {
+    layui.use(['form', 'table','miniPage','element','upload'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table,
-            miniPage = layui.miniPage;
+            miniPage = layui.miniPage,
+            upload = layui.upload;
 
         function addSuffix(list) {
             res = []
@@ -201,9 +214,81 @@
                         }
                     });
                 });
+            }
+
+            //监听导入
+            else if(obj.event === 'uploadXlsx'){
+                /*var formData = new FormData();
+                var name = $("#file").val();
+                formData.append("file",$("#file")[0].files[0]);
+                formData.append("name",name);
+                console.log(name);
+                if(name==null || name==""){
+                    layer.msg("请选择需要上传的文件",{icon:2,time:2500})
+                }else{
+                    $.ajax({
+                        url: '/configuration/uploadzXlsx',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function(){
+                            layer.msg("数据上传中")
+                        },
+                        success: function (res) {
+                            layer.msg("ok")
+                        },
+                        error:function () {
+                            layer.msg("no!!!!")
+                        }
+                    })
+                }*/
+                upload.render({
+                    elem: '#uploadXlsxAAA' //绑定元素
+                    , url: '/configuration/uploadXlsx' //上传接口
+                    , method: 'POST'
+                    , accept: 'file'
+                    , done: function (res) {
+                        //上传完毕回调
+                        return layer.msg("上传成功")
+                    }
+                    , error: function () {
+                        //请求异常回调
+                        return layer.msg("上传失败，请重新尝试")
+                    }
+                })
 
             }
+            //监听导出
+            else if (obj.event==='downXlsx'){
+                $("#downXlsxAAA").click(function(){
+                    window.open('/configuration/downXlsx','_blank')
+                })
+            }
         });
+
+
+
+        //容器外按钮对应的上传
+        var upload1 = upload.render({
+            elem: '#uploadXlsx' //绑定元素
+            ,url: '/configuration/uploadXlsx' //上传接口
+            ,method: 'POST'
+            ,accept: 'file'
+            ,done: function(res){
+                //上传完毕回调
+                return layer.msg("上传成功")
+            }
+            ,error: function(){
+                //请求异常回调
+                return layer.msg("上传失败，请重新尝试")
+            }
+        });
+        //容器外按钮对应的下载
+        $("#downXlsx").click(function(){
+            window.open('/configuration/downXlsx','_blank')
+        })
+
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
