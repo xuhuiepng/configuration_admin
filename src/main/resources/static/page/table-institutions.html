@@ -218,6 +218,7 @@
 
             //监听导入
             else if(obj.event === 'uploadXlsx'){
+                console.log("上传文件");
                 /*var formData = new FormData();
                 var name = $("#file").val();
                 formData.append("file",$("#file")[0].files[0]);
@@ -243,7 +244,7 @@
                         }
                     })
                 }*/
-                upload.render({
+                /*upload.render({
                     elem: '#uploadXlsxAAA' //绑定元素
                     , url: '/configuration/uploadXlsx' //上传接口
                     , method: 'POST'
@@ -256,7 +257,7 @@
                         //请求异常回调
                         return layer.msg("上传失败，请重新尝试")
                     }
-                })
+                })*/
 
             }
             //监听导出
@@ -267,6 +268,20 @@
             }
         });
 
+        upload.render({
+            elem: '#uploadXlsxAAA' //绑定元素
+            , url: '/configuration/uploadXlsx' //上传接口
+            , method: 'POST'
+            , accept: 'file'
+            , done: function (res) {
+                //上传完毕回调
+                return layer.msg("上传成功")
+            }
+            , error: function () {
+                //请求异常回调
+                return layer.msg("上传失败，请重新尝试")
+            }
+        });
 
 
         //容器外按钮对应的上传
