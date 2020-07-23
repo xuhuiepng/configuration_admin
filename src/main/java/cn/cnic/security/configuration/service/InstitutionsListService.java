@@ -17,5 +17,6 @@ public interface InstitutionsListService extends IService<InstitutionsListEntity
 
     PageUtils queryPage(Map<String, Object> params);
 
+    PageUtils queryNullSuffix(Map<String, Object> params);
 }
 

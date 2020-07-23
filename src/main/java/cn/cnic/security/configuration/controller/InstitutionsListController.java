@@ -42,7 +42,6 @@ public class InstitutionsListController {
         return R.ok().put("page", page);
     }
 
-
     /**
      * 信息
      */
