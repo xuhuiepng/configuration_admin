@@ -85,17 +85,20 @@
         function col2Row(data){
             var userList = [];
             var _clientList = [];
+            var contactsList = [];
             var clientList;
 
             var list = data.page.list;
 
             for(var i = 0 ;i<list.length;i++){
                 userList[i] = list[i].userName;
+                contactsList[i] = list[i].contacts;
                 _clientList[i] = list[i].appName;
             }
 
             clientList = unique(_clientList);
             var _userList = unique(userList);
+            var _contactsList = unique(contactsList);
 
 
             var temp = {};
@@ -108,16 +111,21 @@
                 }
                 temp[userList[j]] = arr
             }
+            console.log(list);
             console.log(temp);
 
 
             var ht = "";
 
+            var contactsIndex = 0;
+
             for (var index in temp)  {
-                ht += "<tr><td>" + index + "</td>"
+                ht += "<tr><td>" + index + "</td><td>" + _contactsList[contactsIndex++] + "</td>"
                 for (var m = 0; m < clientList.length; m++) {
                     if (temp[index].indexOf(clientList[m])!==-1) {
                         ht += "<td>"+clientList[m]+"<button id=\""+index+clientList[m]+"\" style=\"float:right\" class=\"layui-btn layui-btn-xs layui-btn-danger data-count-delete\">删除</button></td>"
+                    }else{
+                        ht +="<td>无权限</td>"
                     }
                 }
                 ht += "</tr>"
