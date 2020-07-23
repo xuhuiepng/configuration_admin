@@ -48,6 +48,7 @@ public class InstitutionsListServiceImpl extends ServiceImpl<InstitutionsListDao
         return new PageUtils(page);
     }
 
+    //aa
     @Override
     public PageUtils queryNullSuffix(Map<String, Object> params) {
         IPage<InstitutionsListEntity> info= this.institutionsListDao.queryNullSuffix(new Query<InstitutionsListEntity>().getPage(params));
