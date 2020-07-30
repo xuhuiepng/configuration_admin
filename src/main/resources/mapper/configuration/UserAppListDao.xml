@@ -10,6 +10,7 @@
         <result property="userName" column="user_name"/>
         <result property="clientId" column="client_id"/>
         <result property="appName" column="app_name"/>
+        <result property="contacts" column="contacts"></result>
     </resultMap>
 
 
@@ -19,6 +20,7 @@
             app.user_id,
             app.user_name,
             app.client_id,
+            app.contacts,
             app_authentication.app_name
         FROM
             (
@@ -26,17 +28,20 @@
                     ca_user_app_explain.c_id,
                     users.user_id,
                     users.user_name,
+                    users.contacts,
                     ca_user_app_explain.client_id
                 FROM
                     (
                         SELECT
                             ca_user.user_name,
-                            ca_user.user_id
+                            ca_user.user_id,
+                            ca_user.contacts
                         FROM
                             ca_user
                         WHERE
                                 ca_user.user_id IN ( SELECT ca_user_app_explain.user_id FROM ca_user_app_explain )
                         LIMIT #{minPage},#{pageSize}
+
                     ) AS users
                         LEFT JOIN ca_user_app_explain ON users.user_id = ca_user_app_explain.user_id
                 WHERE
@@ -53,6 +58,7 @@
             app.user_id,
             app.user_name,
             app.client_id,
+            app.contacts,
             app_authentication.app_name
         FROM
             (
@@ -60,12 +66,14 @@
                     ca_user_app_explain.c_id,
                     users.user_id,
                     users.user_name,
+                    users.contacts,
                     ca_user_app_explain.client_id
                 FROM
                     (
                         SELECT
                             ca_user.user_name,
-                            ca_user.user_id
+                            ca_user.user_id,
+                            ca_user.contacts
                         FROM
                             ca_user
                         WHERE

@@ -2,7 +2,7 @@ server:
   port: 12990
 
 spring:
-  .profiles:
+  profiles:
     active: prod
   jackson:
     time-zone: GMT+8

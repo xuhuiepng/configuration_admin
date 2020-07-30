@@ -28,4 +28,9 @@ public class UserAppListEntity {
      * 应用名
      */
     private String appName;
+
+    /**
+     * 联系人
+     */
+    private String contacts;
 }

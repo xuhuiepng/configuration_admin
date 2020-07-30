@@ -4,58 +4,60 @@
         <fieldset class="table-search-fieldset">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" action="">
+                <form action="" class="layui-form layui-form-pane">
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">机构名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="orgName" autocomplete="off" class="layui-input">
+                                <input autocomplete="off" class="layui-input" name="orgName" type="text">
                             </div>
                         </div>
 
                         <div class="layui-inline">
                             <label class="layui-form-label">简称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="abbreviation" autocomplete="off" class="layui-input">
+                                <input autocomplete="off" class="layui-input" name="abbreviation" type="text">
                             </div>
                         </div>
+
                         <div class="layui-inline">
                             <label class="layui-form-label">ip scope</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="ipScope" autocomplete="off" class="layui-input">
+                                <input autocomplete="off" class="layui-input" name="ipScope" type="text">
                             </div>
                         </div>
-                        <!-- <div class="layui-inline">
-                            <label class="layui-form-label">用户城市</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
-                            </div>
-                        </div> -->
 
                         <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button class="layui-btn layui-btn-primary" lay-filter="data-search-btn" lay-submit
+                                    type="submit"><i class="layui-icon"></i> 搜 索
+                            </button>
+                        </div>
+
+                        <div class="layui-inline">
+                            <button class="layui-btn layui-btn-primary" lay-filter="data-searchNullSuffix-btn" lay-submit
+                                    type="submit"><i class="layui-icon"></i>无邮箱后缀列表
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
         </fieldset>
 
-        <script type="text/html" id="toolbarDemo">
+        <script id="toolbarDemo" type="text/html">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加</button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除</button>
+                <button type="button" class="layui-btn layui-btn-sm" id="uploadXlsx_id"><i
+                        class="layui-icon">&#xe681;</i></button>
+                <button type="button" class="layui-btn layui-btn-sm" id="downXlsx_id"><i class="layui-icon">&#xe601;</i>
+                </button>
             </div>
+
         </script>
 
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
-        <script type="text/html" id="currentTableBar">
+        <script id="currentTableBar" type="text/html">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
@@ -64,23 +66,24 @@
 </div>
 
 <script>
-    layui.use(['form', 'table','miniPage','element'], function () {
+    layui.use(['form', 'table', 'miniPage', 'element', 'upload'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table,
-            miniPage = layui.miniPage;
+            miniPage = layui.miniPage,
+            upload = layui.upload;
 
         function addSuffix(list) {
             res = []
-            if(list.length > 0) {
+            if (list.length > 0) {
                 list.forEach((inst) => {
                     $.ajax({
                         url: "/configuration/comparingcharts",
-                        data: {fullname:inst.orgName},
+                        data: {fullname: inst.orgName},
                         async: false,
-                        success: function(resp) {
+                        success: function (resp) {
                             inst.suffix = ''
-                            if(resp.page.list.length > 0) {
+                            if (resp.page.list.length > 0) {
                                 resp.page.list.forEach((item) => {
                                     inst.suffix = inst.suffix + (inst.suffix.length === 0 ? '' : ', ') + item.suffix
                                 })
@@ -96,13 +99,14 @@
         table.render({
             elem: '#currentTableId',
             url: '/configuration/institutions',
-            parseData: function(res){ //res 即为原始返回的数据
+            parseData: function (res) { //res 即为原始返回的数据
                 return {
-                "code": res.code, //解析接口状态
-                "msg": res.msg, //解析提示文本
-                "count": res.page.totalCount, //解析数据长度
-                "data": addSuffix(res.page.list) //解析数据列表
-                };},
+                    "code": res.code, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.page.totalCount, //解析数据长度
+                    "data": addSuffix(res.page.list) //解析数据列表
+                };
+            },
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -139,7 +143,27 @@
                 page: {
                     curr: 1
                 },
-                where:data.field
+                where: data.field
+
+            }, 'data');
+
+            return false;
+        });
+
+
+        // 监听搜索操作
+        form.on('submit(data-searchNullSuffix-btn)', function () {
+            //var res = JSON.stringify({xxx: '1'});
+            // layer.alert(res, {
+            //     title: '搜索信息'
+            // });
+
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                },
+                where: {NoSuffix: '0'}
 
             }, 'data');
 
@@ -158,14 +182,14 @@
                     title: '添加机构',
                     type: 1,
                     shade: 0.2,
-                    maxmin:true,
+                    maxmin: true,
                     shadeClose: true,
                     area: [openWH[0] + 'px', openWH[1] + 'px'],
                     offset: [openWH[2] + 'px', openWH[3] + 'px'],
                     content: content,
-                    end: function(){
-                            location.reload();
-                        }
+                    end: function () {
+                        location.reload();
+                    }
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -173,16 +197,17 @@
             } else if (obj.event === 'delete') {  // 监听删除操作
                 var checkStatus = table.checkStatus('currentTableId')
                     , data = checkStatus.data
-                    ,len = data.length
-                    ,id = []
-                    ,url = '/configuration/institutions:delete';
+                    , len = data.length
+                    , id = []
+                    , url = '/configuration/institutions:delete';
 
-                    
+
                 for (var i = 0; i < len; i++) {
-                        id[i] = data[i]['id']
-                    }; 
+                    id[i] = data[i]['id']
+                }
+                ;
 
-                layer.confirm('确定删除吗？',function(index){
+                layer.confirm('确定删除吗？', function (index) {
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -190,9 +215,9 @@
                         data: JSON.stringify(id),
                         dataType: "json",
                         success: function (res) {
-                            if (res.code== 0) {
+                            if (res.code == 0) {
                                 layer.msg("删除成功");
-                                table.reload('currentTableId',{});
+                                table.reload('currentTableId', {});
                                 layer.close(index);
                             }
                         },
@@ -201,9 +226,27 @@
                         }
                     });
                 });
-
             }
         });
+
+        upload.render({
+            elem: '#uploadXlsx_id' //绑定元素
+            , url: '/configuration/uploadXlsx' //上传接口
+            , method: 'POST'
+            , accept: 'file'
+            , done: function (res) {
+                //上传完毕回调
+                return layer.msg("上传成功")
+            }
+            , error: function () {
+                //请求异常回调
+                return layer.msg("上传失败，请重新尝试")
+            }
+        });
+
+        $("#downXlsx_id").click(function () {
+            window.open('/configuration/downXlsx', '_blank')
+        })
 
         //监听表格复选框选择
         table.on('checkbox(currentTableFilter)', function (obj) {
@@ -213,7 +256,7 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var data = obj.data;
             if (obj.event === 'edit') {
-                $.get("/configuration/institutions/"+data.id,function(res){
+                $.get("/configuration/institutions/" + data.id, function (res) {
                     var content = miniPage.getHrefContent('page/table/edit-institution.html');
                     var openWH = miniPage.getOpenWidthHeight();
 
@@ -225,8 +268,8 @@
                         } else {
                             for (var x in list) {
                                 var html = " <div class=\"layui-input-block\">\n" +
-                                "                <input type=\"input\" name=\"oldSecondCategory\" id=\"" + list[x].id + "\" + value=\"" + list[x].suffix + "\" lay-verify=\"required\" class=\"layui-input\">\n" +
-                                "              </div>";
+                                    "                <input type=\"input\" name=\"oldSecondCategory\" id=\"" + list[x].id + "\" + value=\"" + list[x].suffix + "\" lay-verify=\"required\" class=\"layui-input\">\n" +
+                                    "              </div>";
                                 $("#appendSecond").append(html);
                             }
                         }
@@ -236,26 +279,26 @@
                         title: '编辑机构',
                         type: 1,
                         shade: 0.2,
-                        maxmin:true,
+                        maxmin: true,
                         shadeClose: true,
                         area: [openWH[0] + 'px', openWH[1] + 'px'],
                         offset: [openWH[2] + 'px', openWH[3] + 'px'],
                         content: content,
-                        success: function(layero,index){
+                        success: function (layero, index) {
                             $.ajax({
                                 url: "/configuration/comparingcharts",
-                                data: {fullname:res.institutionsList.orgName},
+                                data: {fullname: res.institutionsList.orgName},
                                 async: false,
-                                success: function(resp) {
+                                success: function (resp) {
                                     generateSecond(resp.page.list)
                                 }
                             });
-                            form.val("dataFrm",res.institutionsList);
+                            form.val("dataFrm", res.institutionsList);
                             form.render()
                         },
-                        end: function(){
+                        end: function () {
                             //location.reload()
-                            table.reload('currentTableId',{});
+                            table.reload('currentTableId', {});
                         }
 
 
@@ -270,7 +313,7 @@
             } else if (obj.event === 'delete') {
                 var url = '/configuration/institutions:delete';
 
-                layer.confirm('真的删除 '+data.orgName+' 吗？', function (index) {
+                layer.confirm('真的删除 ' + data.orgName + ' 吗？', function (index) {
 
                     $.ajax({
                         type: "POST",
@@ -290,7 +333,7 @@
                         }
                     });
 
-                   
+
                 });
             }
         });
