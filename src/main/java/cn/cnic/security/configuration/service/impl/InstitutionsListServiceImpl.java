@@ -39,7 +39,7 @@ public class InstitutionsListServiceImpl extends ServiceImpl<InstitutionsListDao
         if(params.containsKey("NoSuffix")) {
             return queryNullSuffix(params);
         }
-        queryWrapper.gt("id",13);
+        //queryWrapper.gt("id",13);
         IPage<InstitutionsListEntity> page = this.page(
                 new Query<InstitutionsListEntity>().getPage(params),
                 queryWrapper

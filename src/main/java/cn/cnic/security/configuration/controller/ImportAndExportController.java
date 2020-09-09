@@ -66,11 +66,11 @@ public class ImportAndExportController {
                     }
                 });
 
-        // TODO: 执行successList的入库操作。
+        //执行successList的入库操作。
         for (int i = 0; i < successList.size(); i++) {
-            System.out.println(successList.get(i));
+            //System.out.println(successList.get(i));
             int count = importAndExportService.addInstitution(successList.get(i));
-            System.out.println("成功导入"+count+"条");
+            //System.out.println("成功导入"+count+"条");
         }
 
         return ResponseEntity.ok(MapUtils.newHashMap(

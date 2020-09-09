@@ -40,12 +40,12 @@ public class ImportAndExportEntity implements Serializable {
     /**
      *
      */
-    @ExcelField(value = "longitude",maxLength = 11)
+    @ExcelField(value = "longitude",maxLength = 50)
     private String longitude;
     /**
      *
      */
-    @ExcelField(value = "latitude",maxLength = 11)
+    @ExcelField(value = "latitude",maxLength = 50)
     private String latitude;
     /**
      *
