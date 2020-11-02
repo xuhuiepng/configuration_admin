@@ -80,7 +80,7 @@ public class AuthenticationController {
                 SysmUserInfo sysmUserInfo = authenticationAndAuthorizationServicel.authorization(appKey,cstnetId);
                 //认证
                 SysmUserInfo findDeactivation = authenticationAndAuthorizationServicel.findDeactivation(appKey, cstnetId);
-                //为空则未授权返回token，不为空则用户已授权
+                //为空则未认证，不为空返回token
                 if(findDeactivation==null){
                     r = R.error(6, "帐户未获得权限");
                 }else{
